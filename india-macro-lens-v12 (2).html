@@ -1,0 +1,2442 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>India Macro Lens — Read the Economy</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;0,700;1,400;1,500&family=JetBrains+Mono:wght@400;500;700&family=Outfit:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.js"></script>
+<style>
+:root{
+  --bg-page:#F7F5F0; --bg-surface:#FFFFFF; --bg-elev:#FBF9F4; --bg-hover:#EAE7DE; --bg-ink:#1C1C1A;
+  --tx-1:#1C1C1A; --tx-2:#5C5C58; --tx-3:#8A8A86; --tx-4:#B5B2AA;
+  --pos:#2E5B4B; --neg:#A73C3C; --gold:#D6A848; --gold-d:#B58E2E;
+  --line:#E2DFD8; --line-strong:#1C1C1A;
+  --serif:'Cormorant Garamond', Georgia, serif;
+  --sans:'Outfit', system-ui, sans-serif;
+  --mono:'JetBrains Mono', ui-monospace, monospace;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth}
+body{font-family:var(--sans);background:var(--bg-page);color:var(--tx-1);min-height:100vh;-webkit-font-smoothing:antialiased;font-weight:300;font-size:16px;line-height:1.65}
+::selection{background:var(--bg-ink);color:var(--bg-page)}
+::-webkit-scrollbar{width:8px;height:8px}
+::-webkit-scrollbar-track{background:var(--bg-page)}
+::-webkit-scrollbar-thumb{background:var(--line);}
+::-webkit-scrollbar-thumb:hover{background:var(--tx-3)}
+
+/* NAV */
+.nav{position:sticky;top:0;z-index:100;background:rgba(247,245,240,0.92);backdrop-filter:blur(12px);border-bottom:1px solid var(--line)}
+.nav-inner{max-width:1480px;margin:0 auto;padding:14px 32px;display:flex;align-items:center;gap:28px}
+.brand{font-family:var(--serif);font-size:24px;font-weight:500;letter-spacing:-0.01em;line-height:1;display:flex;align-items:baseline;gap:6px}
+.brand .dot{display:inline-block;width:7px;height:7px;background:var(--gold);margin-right:6px;transform:translateY(-3px)}
+.brand em{font-style:italic;color:var(--tx-2);font-weight:400}
+.nav-tabs{display:flex;gap:0;margin-left:auto;border:1px solid var(--line);background:var(--bg-surface)}
+.tab-btn{padding:10px 18px;font-family:var(--sans);font-size:11px;font-weight:500;text-transform:uppercase;letter-spacing:0.14em;color:var(--tx-2);background:transparent;border:none;cursor:pointer;border-right:1px solid var(--line);transition:all .15s}
+.tab-btn:last-child{border-right:none}
+.tab-btn:hover{background:var(--bg-hover);color:var(--tx-1)}
+.tab-btn.active{background:var(--bg-ink);color:var(--bg-page)}
+.nav-search{display:flex;align-items:center;border:1px solid var(--line);background:var(--bg-surface);padding:8px 12px;gap:8px;min-width:260px}
+.nav-search input{border:none;outline:none;background:transparent;font-family:var(--mono);font-size:12px;color:var(--tx-1);width:100%}
+.nav-search svg{flex-shrink:0;color:var(--tx-3)}
+.live-pill{display:inline-flex;align-items:center;gap:6px;font-family:var(--mono);font-size:10px;color:var(--tx-2);padding:6px 10px;border:1px solid var(--line);background:var(--bg-surface);text-transform:uppercase;letter-spacing:0.1em}
+.live-pill .dotp{width:6px;height:6px;background:var(--pos);border-radius:50%;animation:pulse 2s infinite}
+@keyframes pulse{0%,100%{opacity:1}50%{opacity:0.35}}
+
+/* LAYOUT */
+.container{max-width:1480px;margin:0 auto;padding:32px;display:grid;grid-template-columns:240px 1fr;gap:32px}
+.sidebar{position:sticky;top:78px;align-self:start;height:calc(100vh - 110px);overflow-y:auto;padding-right:8px;border-right:1px solid var(--line);padding-top:8px}
+.sb-section{margin-bottom:18px}
+.sb-head{font-family:var(--mono);font-size:9.5px;text-transform:uppercase;letter-spacing:0.18em;color:var(--tx-3);padding:6px 0 8px;display:flex;align-items:center;gap:8px}
+.sb-head::before{content:'';width:14px;height:1px;background:var(--tx-3)}
+.sb-item{padding:7px 10px 7px 22px;font-size:13px;color:var(--tx-2);cursor:pointer;display:flex;align-items:center;justify-content:space-between;border-left:2px solid transparent;transition:all .12s;font-weight:400}
+.sb-item:hover{color:var(--tx-1);background:var(--bg-surface);border-left-color:var(--tx-3)}
+.sb-item.active{color:var(--tx-1);background:var(--bg-surface);border-left-color:var(--bg-ink);font-weight:500}
+.sb-badge{font-family:var(--mono);font-size:8.5px;font-weight:500;padding:2px 5px;text-transform:uppercase;letter-spacing:0.06em;border:1px solid var(--line)}
+.b-lead{color:var(--pos);border-color:rgba(46,91,75,0.3)}
+.b-coin{color:var(--gold-d);border-color:rgba(181,142,46,0.3)}
+.b-lag{color:var(--neg);border-color:rgba(167,60,60,0.3)}
+.sb-filter{display:flex;gap:4px;margin-bottom:14px;flex-wrap:wrap}
+.sb-filter button{font-family:var(--mono);font-size:9.5px;padding:5px 9px;background:var(--bg-surface);border:1px solid var(--line);color:var(--tx-2);cursor:pointer;text-transform:uppercase;letter-spacing:0.08em}
+.sb-filter button.on{background:var(--bg-ink);color:var(--bg-page);border-color:var(--bg-ink)}
+
+.main{min-width:0}
+.page{animation:fadeUp .35s ease}
+@keyframes fadeUp{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:translateY(0)}}
+
+/* TYPOGRAPHY */
+h1.disp{font-family:var(--serif);font-size:clamp(40px,5vw,68px);font-weight:500;letter-spacing:-0.025em;line-height:0.98;color:var(--tx-1)}
+h1.disp em{font-style:italic;color:var(--tx-2);font-weight:400}
+h2.sec{font-family:var(--serif);font-size:clamp(28px,3vw,42px);font-weight:500;letter-spacing:-0.02em;line-height:1.08;color:var(--tx-1);margin-bottom:8px}
+h2.sec em{font-style:italic;color:var(--tx-2)}
+h3.sub{font-family:var(--serif);font-size:22px;font-weight:500;letter-spacing:-0.01em;color:var(--tx-1)}
+.eyebrow{font-family:var(--mono);font-size:10.5px;text-transform:uppercase;letter-spacing:0.2em;color:var(--tx-3);margin-bottom:14px;display:inline-flex;align-items:center;gap:10px}
+.eyebrow::before{content:'';width:24px;height:1px;background:var(--gold)}
+.lede{font-family:var(--serif);font-size:22px;font-weight:400;font-style:italic;line-height:1.45;color:var(--tx-2);max-width:680px}
+.prose{font-size:16px;line-height:1.75;color:var(--tx-2);font-weight:300}
+.prose strong{color:var(--tx-1);font-weight:500}
+.prose p+p{margin-top:14px}
+
+/* CARDS */
+.surface{background:var(--bg-surface);border:1px solid var(--line);transition:border-color .2s}
+.surface:hover{border-color:var(--line-strong)}
+.surface-p{padding:24px 28px}
+
+/* HERO */
+.hero{padding:60px 0 40px;border-bottom:1px solid var(--line);margin-bottom:48px;position:relative;overflow:hidden}
+.hero-grid{display:grid;grid-template-columns:1.3fr 1fr;gap:64px;align-items:end}
+.hero-meta{font-family:var(--mono);font-size:10px;color:var(--tx-3);text-transform:uppercase;letter-spacing:0.18em;display:flex;gap:20px;margin-bottom:32px}
+.hero-meta span::before{content:'·';margin-right:18px;color:var(--tx-4)}
+.hero-meta span:first-child::before{display:none}
+.hero-stats{display:grid;grid-template-columns:1fr 1fr;gap:0;border-top:1px solid var(--line);border-bottom:1px solid var(--line)}
+.hs{padding:20px 0;border-right:1px solid var(--line)}
+.hs:last-child{border-right:none;padding-left:20px}
+.hs-lbl{font-family:var(--mono);font-size:9.5px;color:var(--tx-3);text-transform:uppercase;letter-spacing:0.18em;margin-bottom:8px}
+.hs-val{font-family:var(--mono);font-size:28px;font-weight:500;color:var(--tx-1);line-height:1}
+.hs-val .unit{font-size:13px;color:var(--tx-3);margin-left:6px}
+.hs-delta{font-family:var(--mono);font-size:11px;margin-top:6px}
+.dp{color:var(--pos)} .dn{color:var(--neg)}
+
+/* SNAPSHOT EXTENSIONS */
+.story-card{background:var(--bg-surface);border:1px solid var(--line);border-left:4px solid var(--gold);padding:26px 32px;margin-bottom:32px}
+.story-body{font-family:var(--serif);font-size:20px;font-style:italic;line-height:1.55;color:var(--tx-1);font-weight:400}
+.story-body strong{color:var(--tx-1);font-style:normal;font-weight:600;background:rgba(28,28,26,0.06);padding:0 4px}
+.story-body em{color:var(--gold-d);font-style:normal;font-weight:500;font-family:var(--mono);font-size:0.9em}
+
+.cat-section{margin-bottom:48px}
+.cat-section-head{display:flex;justify-content:space-between;align-items:flex-start;padding:18px 0 12px;border-bottom:1px solid var(--line);margin-bottom:14px}
+.cs-cat{font-family:var(--serif);font-size:30px;font-weight:500;color:var(--tx-1);letter-spacing:-0.015em;line-height:1}
+.cs-tag{font-family:var(--mono);font-size:11px;text-transform:uppercase;letter-spacing:0.16em;color:var(--tx-3);margin-top:8px}
+.cs-count{font-family:var(--mono);font-size:10px;text-transform:uppercase;letter-spacing:0.14em;color:var(--tx-3);padding:4px 10px;border:1px solid var(--line);white-space:nowrap;margin-top:4px}
+.cs-body{font-size:14.5px;color:var(--tx-2);line-height:1.7;max-width:880px;margin-bottom:16px;font-weight:300}
+
+.ic-val-row{display:flex;align-items:flex-start;justify-content:space-between;gap:8px}
+.ic-edit{background:transparent;border:1px solid var(--line);color:var(--tx-3);width:24px;height:24px;font-size:11px;cursor:pointer;line-height:1;display:flex;align-items:center;justify-content:center;flex-shrink:0;transition:all .15s}
+.ic-edit:hover{background:var(--bg-ink);color:var(--bg-page);border-color:var(--bg-ink)}
+.ic-val{cursor:pointer;transition:color .15s}
+.ic-val:hover{color:var(--gold-d)}
+.snap-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(260px,1fr));gap:0;border-top:1px solid var(--line);border-left:1px solid var(--line)}
+.ind-card{background:var(--bg-surface);border-right:1px solid var(--line);border-bottom:1px solid var(--line);padding:18px 20px 14px;cursor:pointer;transition:all .2s;position:relative;display:flex;flex-direction:column;gap:8px;min-height:170px}
+.ind-card:hover{background:var(--bg-elev)}
+.ic-top{display:flex;justify-content:space-between;align-items:flex-start;gap:8px}
+.ic-name{font-size:12.5px;color:var(--tx-2);font-weight:400;line-height:1.3;letter-spacing:-0.005em}
+.ic-cat{font-family:var(--mono);font-size:8.5px;color:var(--tx-3);text-transform:uppercase;letter-spacing:0.12em;white-space:nowrap}
+.ic-val{font-family:var(--mono);font-size:30px;font-weight:500;color:var(--tx-1);line-height:1;letter-spacing:-0.01em}
+.ic-val .u{font-size:12px;color:var(--tx-3);margin-left:4px;font-weight:400}
+.ic-meta{display:flex;justify-content:space-between;align-items:center;font-family:var(--mono);font-size:10px;color:var(--tx-3);text-transform:uppercase;letter-spacing:0.1em}
+.ic-status{padding:2px 6px;border:1px solid var(--line);font-size:9px}
+.ic-status.ok{color:var(--pos);border-color:rgba(46,91,75,0.4)}
+.ic-status.warn{color:var(--gold-d);border-color:rgba(181,142,46,0.5)}
+.ic-status.bad{color:var(--neg);border-color:rgba(167,60,60,0.4)}
+.ic-spark{height:36px;margin-top:auto;position:relative}
+
+/* INPUT */
+.inp{font-family:var(--mono);font-size:14px;background:var(--bg-page);border:1px solid var(--line);padding:8px 10px;color:var(--tx-1);width:100%;outline:none}
+.inp:focus{border-color:var(--line-strong);background:var(--bg-surface)}
+.inp.filled{border-color:var(--bg-ink);background:var(--bg-surface)}
+
+/* BUTTONS */
+.btn{display:inline-flex;align-items:center;gap:8px;padding:11px 20px;font-family:var(--sans);font-size:11px;font-weight:500;text-transform:uppercase;letter-spacing:0.16em;cursor:pointer;border:1px solid var(--bg-ink);transition:all .2s;text-decoration:none}
+.btn-primary{background:var(--bg-ink);color:var(--bg-page)}
+.btn-primary:hover{background:var(--tx-2);border-color:var(--tx-2)}
+.btn-secondary{background:transparent;color:var(--tx-1)}
+.btn-secondary:hover{background:var(--bg-ink);color:var(--bg-page)}
+.btn-ai{background:var(--bg-elev);color:var(--tx-1);border-color:var(--line);padding:8px 14px;font-size:10px;letter-spacing:0.14em}
+.btn-ai:hover{border-color:var(--bg-ink);background:var(--bg-surface)}
+
+/* SCORE */
+.score-wrap{display:grid;grid-template-columns:1fr 1fr;gap:0;border:1px solid var(--line);background:var(--bg-surface);margin-bottom:32px}
+.score-cell{padding:32px 36px;border-right:1px solid var(--line)}
+.score-cell:last-child{border-right:none}
+.score-num{font-family:var(--mono);font-size:68px;font-weight:500;color:var(--tx-1);line-height:1;letter-spacing:-0.03em}
+.score-num small{font-size:24px;color:var(--tx-3)}
+.score-phase{font-family:var(--serif);font-size:34px;font-style:italic;color:var(--tx-1);font-weight:500;line-height:1.1;margin-top:6px}
+.cycle-track{position:relative;height:8px;background:linear-gradient(90deg,#A73C3C 0%,#D6A848 35%,#2E5B4B 65%,#5b8db8 100%);margin:24px 0 12px}
+.cycle-dot{position:absolute;top:-6px;width:20px;height:20px;background:var(--bg-surface);border:2px solid var(--bg-ink);transform:translateX(-50%);transition:left .8s ease}
+.cycle-labels{display:flex;justify-content:space-between;font-family:var(--mono);font-size:9.5px;color:var(--tx-3);text-transform:uppercase;letter-spacing:0.14em}
+
+/* COMPARE */
+.preset-row{display:flex;flex-wrap:wrap;gap:6px;align-items:center;margin-bottom:14px}
+.pr-eyebrow{font-family:var(--mono);font-size:10px;color:var(--tx-3);text-transform:uppercase;letter-spacing:0.18em;margin-right:8px}
+.preset-btn{font-family:var(--mono);font-size:10.5px;padding:7px 11px;background:var(--bg-surface);border:1px solid var(--line);color:var(--tx-1);cursor:pointer;text-transform:uppercase;letter-spacing:0.1em;transition:all .15s}
+.preset-btn:hover{background:var(--bg-ink);color:var(--bg-page);border-color:var(--bg-ink)}
+.view-toggle{display:inline-flex;border:1px solid var(--line);background:var(--bg-surface);margin:14px 0 6px}
+.vt-btn{font-family:var(--mono);font-size:10.5px;padding:8px 14px;background:transparent;color:var(--tx-2);border:none;border-right:1px solid var(--line);cursor:pointer;text-transform:uppercase;letter-spacing:0.12em;transition:all .15s}
+.vt-btn:last-child{border-right:none}
+.vt-btn:hover:not(:disabled){background:var(--bg-elev);color:var(--tx-1)}
+.vt-btn.on{background:var(--bg-ink);color:var(--bg-page)}
+.vt-btn:disabled{opacity:0.4;cursor:not-allowed}
+.view-help{font-size:12.5px;color:var(--tx-3);font-style:italic;margin-bottom:12px;line-height:1.55;max-width:880px;font-weight:300}
+.cmp-insights-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(440px,1fr));gap:0;border-top:1px solid var(--line);border-left:1px solid var(--line)}
+.insight-card{background:var(--bg-surface);border-right:1px solid var(--line);border-bottom:1px solid var(--line);padding:22px 26px;display:flex;flex-direction:column;gap:14px}
+.ic-head{display:flex;justify-content:space-between;align-items:flex-start;gap:14px;padding-bottom:14px;border-bottom:1px solid var(--line)}
+.ic-pair{font-family:var(--serif);font-size:18px;color:var(--tx-1);font-weight:500;line-height:1.25}
+.ic-corr{font-family:var(--mono);font-size:15px;font-weight:500;letter-spacing:-0.01em;padding:4px 10px;border:1px solid currentColor;white-space:nowrap}
+.ic-corr.pos{color:var(--pos)}
+.ic-corr.neg{color:var(--neg)}
+.ic-narr{font-size:14px;color:var(--tx-2);line-height:1.6;font-weight:300}
+.ic-narr strong{color:var(--tx-1);font-weight:500}
+.ic-stats{display:grid;grid-template-columns:1fr 1fr;gap:0;border-top:1px solid var(--line);padding-top:14px}
+.ic-stats > div{padding-right:14px;border-right:1px solid var(--line)}
+.ic-stats > div:last-child{padding-left:14px;border-right:none}
+.ic-stats .k{font-family:var(--mono);font-size:9.5px;text-transform:uppercase;letter-spacing:0.14em;color:var(--tx-3);margin-bottom:6px}
+.ic-stats .v{font-family:var(--mono);font-size:11px;color:var(--tx-2);display:flex;flex-direction:column;gap:4px}
+.ic-stats .v strong{color:var(--tx-1);font-weight:500}
+.ic-read{font-size:13px;color:var(--tx-2);line-height:1.65;padding:12px 14px;background:var(--bg-elev);border-left:3px solid var(--gold);font-weight:300}
+.ic-read strong{color:var(--tx-1);font-weight:500}
+.cmp-bar{display:flex;flex-wrap:wrap;gap:8px;padding:18px;background:var(--bg-surface);border:1px solid var(--line);margin-bottom:0;border-bottom:none;align-items:center}
+.cmp-chip{display:inline-flex;align-items:center;gap:6px;padding:6px 11px;background:var(--bg-page);border:1px solid var(--line);font-family:var(--mono);font-size:11px;color:var(--tx-1)}
+.cmp-chip .x{cursor:pointer;color:var(--tx-3);font-size:14px;line-height:1}
+.cmp-chip .x:hover{color:var(--neg)}
+.cmp-dot{width:9px;height:9px}
+.cmp-add{position:relative}
+.cmp-add select{font-family:var(--mono);font-size:11px;padding:7px 28px 7px 12px;background:var(--bg-page) url("data:image/svg+xml,%3Csvg width='10' height='6' viewBox='0 0 10 6' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M1 1l4 4 4-4' stroke='%231C1C1A' stroke-width='1.3' fill='none'/%3E%3C/svg%3E") no-repeat right 10px center;border:1px solid var(--bg-ink);color:var(--tx-1);cursor:pointer;-webkit-appearance:none;appearance:none}
+.chart-wrap{background:var(--bg-surface);border:1px solid var(--line);padding:24px 28px;height:460px;position:relative}
+.chart-help{display:flex;gap:18px;margin-top:14px;font-family:var(--mono);font-size:10px;color:var(--tx-3);text-transform:uppercase;letter-spacing:0.12em}
+
+/* SIMULATE */
+.sim-grid{display:grid;grid-template-columns:380px 1fr;gap:24px}
+.sim-card{background:var(--bg-surface);border:1px solid var(--line);padding:24px}
+.sim-section h4{font-family:var(--mono);font-size:10px;text-transform:uppercase;letter-spacing:0.16em;color:var(--tx-3);margin-bottom:12px;padding-bottom:8px;border-bottom:1px solid var(--line)}
+.dir-row{display:flex;gap:6px;margin-bottom:14px;align-items:center;justify-content:space-between}
+.dir-row .nm{font-size:13px;color:var(--tx-1);flex:1;line-height:1.2}
+.dir-btns{display:flex;gap:2px;border:1px solid var(--line)}
+.dir-btn{font-family:var(--mono);font-size:10px;padding:6px 9px;background:var(--bg-surface);border:none;border-right:1px solid var(--line);cursor:pointer;color:var(--tx-3);text-transform:uppercase;letter-spacing:0.1em}
+.dir-btn:last-child{border-right:none}
+.dir-btn.up.on{background:var(--pos);color:#fff}
+.dir-btn.dn.on{background:var(--neg);color:#fff}
+.dir-btn.fl.on{background:var(--tx-2);color:#fff}
+.sim-controls{position:sticky;top:78px;align-self:start;max-height:calc(100vh - 110px);overflow-y:auto;padding-right:6px}
+.sim-controls-head{display:flex;justify-content:space-between;align-items:baseline;margin-bottom:14px}
+.sim-controls-head .ct{font-family:var(--mono);font-size:10px;color:var(--tx-3);text-transform:uppercase;letter-spacing:0.16em}
+.sim-controls-head button{font-family:var(--mono);font-size:10px;background:transparent;border:none;color:var(--tx-2);cursor:pointer;text-transform:uppercase;letter-spacing:0.14em;text-decoration:underline;text-underline-offset:3px}
+.sim-controls-head button:hover{color:var(--neg)}
+
+/* SIM RESULTS */
+.sim-prompt{padding:64px 32px;text-align:center;background:var(--bg-surface);border:1px solid var(--line)}
+.sim-prompt .num{font-family:var(--mono);font-size:11px;color:var(--tx-3);text-transform:uppercase;letter-spacing:0.18em;margin-bottom:14px}
+.sim-prompt .em{font-family:var(--serif);font-size:28px;font-style:italic;color:var(--tx-1);margin-bottom:14px;line-height:1.2}
+.sim-prompt .hint{font-size:14px;color:var(--tx-2);max-width:460px;margin:0 auto;line-height:1.65;font-weight:300}
+
+.sim-hero{display:grid;grid-template-columns:repeat(3,1fr);gap:0;border:1px solid var(--line);background:var(--bg-surface);margin-bottom:24px}
+.sim-hero .cell{padding:22px 24px;border-right:1px solid var(--line);position:relative;overflow:hidden;min-height:140px;display:flex;flex-direction:column;justify-content:flex-start;gap:6px}
+.sim-hero .cell:last-child{border-right:none}
+.sim-hero .cell::before{content:'';position:absolute;top:0;left:0;right:0;height:3px}
+.sim-hero .cell.pos::before{background:var(--pos)}
+.sim-hero .cell.neg::before{background:var(--neg)}
+.sim-hero .lbl{font-family:var(--mono);font-size:9.5px;text-transform:uppercase;letter-spacing:0.18em;color:var(--tx-3)}
+.sim-hero .nm{font-family:var(--serif);font-size:22px;color:var(--tx-1);line-height:1.15;letter-spacing:-0.01em;font-weight:500;margin:2px 0}
+.sim-hero .delta{font-family:var(--mono);font-size:24px;line-height:1;letter-spacing:-0.01em;font-weight:500;margin-top:2px}
+.sim-hero .delta.pos{color:var(--pos)}
+.sim-hero .delta.neg{color:var(--neg)}
+.sim-hero .proj{font-family:var(--mono);font-size:11px;color:var(--tx-3);text-transform:uppercase;letter-spacing:0.12em;margin-top:auto;padding-top:6px}
+
+.sankey-wrap{display:none}
+.sankey-heads{display:none}
+.sankey-svg{display:none}
+
+/* PROJECT-ANY-INDICATOR LOOKUP */
+.project-row{background:var(--bg-surface);border:1px solid var(--line);padding:18px 22px;margin-bottom:18px;display:flex;align-items:center;gap:14px;flex-wrap:wrap}
+.project-row .pr-label{font-family:var(--mono);font-size:10.5px;text-transform:uppercase;letter-spacing:0.16em;color:var(--tx-2);display:flex;align-items:center;gap:8px}
+.project-row .pr-label::before{content:'⌖';font-size:18px;color:var(--gold);line-height:1}
+.project-row select{font-family:var(--mono);font-size:12px;padding:8px 32px 8px 12px;background:var(--bg-page) url("data:image/svg+xml,%3Csvg width='10' height='6' viewBox='0 0 10 6' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M1 1l4 4 4-4' stroke='%231C1C1A' stroke-width='1.3' fill='none'/%3E%3C/svg%3E") no-repeat right 12px center;border:1px solid var(--bg-ink);color:var(--tx-1);cursor:pointer;-webkit-appearance:none;appearance:none;min-width:240px}
+.pr-result{margin-top:14px;padding:16px 20px;background:var(--bg-elev);border-left:3px solid var(--gold);width:100%;animation:fadeUp .25s ease}
+.pr-result.miss{border-left-color:var(--tx-4)}
+.pr-result .nm{font-family:var(--serif);font-size:20px;color:var(--tx-1);font-weight:500;margin-bottom:8px;display:flex;align-items:center;gap:10px}
+.pr-result .vals{font-family:var(--mono);font-size:13px;color:var(--tx-2);margin-bottom:12px}
+.pr-result .vals .arrow{font-weight:500}
+.pr-result .vals .arrow.pos{color:var(--pos)}
+.pr-result .vals .arrow.neg{color:var(--neg)}
+.pr-result .vals .big{font-size:18px;color:var(--tx-1);font-weight:500;letter-spacing:-0.01em}
+.pr-result .narr{font-size:13px;color:var(--tx-2);line-height:1.65;font-weight:300;margin-top:6px}
+.pr-result .narr strong{color:var(--tx-1);font-weight:500}
+.pr-result .actions{margin-top:12px;display:flex;gap:8px;flex-wrap:wrap}
+.pr-result .actions button{font-family:var(--mono);font-size:10px;padding:6px 12px;background:var(--bg-surface);border:1px solid var(--line);color:var(--tx-1);cursor:pointer;text-transform:uppercase;letter-spacing:0.12em}
+.pr-result .actions button:hover{border-color:var(--bg-ink);background:var(--bg-ink);color:var(--bg-page)}
+
+/* CASCADE TREE — replacing Sankey */
+.cascade-head{display:flex;justify-content:space-between;align-items:baseline;margin-bottom:14px}
+.cascade-head .ttl{font-family:var(--mono);font-size:10.5px;text-transform:uppercase;letter-spacing:0.16em;color:var(--tx-3)}
+.cascade-head .meta{font-family:var(--mono);font-size:10px;color:var(--tx-4);text-transform:uppercase;letter-spacing:0.12em}
+.cascade-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(420px,1fr));gap:0;margin-bottom:24px;border-top:1px solid var(--line);border-left:1px solid var(--line)}
+.cascade{background:var(--bg-surface);border-right:1px solid var(--line);border-bottom:1px solid var(--line)}
+.cascade-input{display:grid;grid-template-columns:auto 1fr auto;align-items:center;gap:12px;padding:14px 20px;background:var(--bg-ink);color:var(--bg-page);font-family:var(--serif);font-size:19px;font-weight:500;letter-spacing:-0.01em}
+.cascade-input .ci-arrow{font-family:var(--mono);font-size:22px;font-weight:500;width:28px;height:28px;border:1.5px solid currentColor;display:flex;align-items:center;justify-content:center;line-height:0}
+.cascade-input.up .ci-arrow{color:#9EC7B6}
+.cascade-input.dn .ci-arrow{color:#E0A39A}
+.cascade-input .ci-cat{font-family:var(--mono);font-size:9.5px;text-transform:uppercase;letter-spacing:0.14em;color:rgba(251,249,244,0.55)}
+.cascade-body{padding:18px 22px 14px}
+.cascade-branch{margin-bottom:14px}
+.cascade-branch:last-child{margin-bottom:0}
+.cascade-1{display:grid;grid-template-columns:auto 1fr auto;gap:10px;align-items:center;padding:9px 12px;background:var(--bg-page);border:1px solid var(--line);font-size:13.5px;cursor:pointer;transition:all .15s;border-left-width:3px}
+.cascade-1.pos{border-left-color:var(--pos)}
+.cascade-1.neg{border-left-color:var(--neg)}
+.cascade-1:hover{background:var(--bg-elev);border-color:var(--bg-ink)}
+.cascade-1 .cn-arrow{font-family:var(--mono);font-size:15px;font-weight:500;width:18px;text-align:center}
+.cascade-1.pos .cn-arrow{color:var(--pos)}
+.cascade-1.neg .cn-arrow{color:var(--neg)}
+.cascade-1 .cn-name{color:var(--tx-1);font-weight:500;letter-spacing:-0.005em}
+.cascade-1 .cn-tag{font-family:var(--mono);font-size:9.5px;color:var(--tx-3);text-transform:uppercase;letter-spacing:0.1em;white-space:nowrap;padding:2px 6px;border:1px solid var(--line);background:var(--bg-surface)}
+.cascade-children{margin:6px 0 0 22px;padding-left:18px;border-left:1px dashed var(--line)}
+.cascade-2{display:grid;grid-template-columns:auto 1fr auto;gap:8px;align-items:center;padding:6px 10px;font-size:12.5px;cursor:pointer;transition:all .15s;position:relative}
+.cascade-2::before{content:'';position:absolute;left:-18px;top:50%;width:14px;height:0;border-top:1px dashed var(--line)}
+.cascade-2:hover{background:var(--bg-elev)}
+.cascade-2 .cn-arrow{font-family:var(--mono);font-size:13px;width:16px;text-align:center;font-weight:500}
+.cascade-2.pos .cn-arrow{color:var(--pos)}
+.cascade-2.neg .cn-arrow{color:var(--neg)}
+.cascade-2 .cn-name{color:var(--tx-2);font-weight:400}
+.cascade-2 .cn-tag{font-family:var(--mono);font-size:8.5px;color:var(--tx-4);text-transform:uppercase;letter-spacing:0.1em;white-space:nowrap}
+.cascade-empty{padding:18px 22px;color:var(--tx-3);font-style:italic;font-size:13px}
+.sankey-edge{fill:none;transition:opacity .2s}
+.sankey-edge.dimmed{opacity:0.15}
+@keyframes drawSankey{from{stroke-dashoffset:1000}to{stroke-dashoffset:0}}
+.sankey-edge.animate{stroke-dasharray:1000;animation:drawSankey 1.1s ease forwards}
+
+.cat-strip{display:grid;grid-template-columns:repeat(8,1fr);gap:0;border:1px solid var(--line);background:var(--bg-surface);margin-bottom:24px}
+.cat-cell{padding:14px 10px;border-right:1px solid var(--line);text-align:center;position:relative;overflow:hidden;transition:background .2s}
+.cat-cell:last-child{border-right:none}
+.cat-cell .lbl{font-family:var(--mono);font-size:9px;text-transform:uppercase;letter-spacing:0.14em;color:var(--tx-3);margin-bottom:8px}
+.cat-cell .arr{font-family:var(--mono);font-size:24px;line-height:1;font-weight:500;margin-bottom:4px}
+.cat-cell .mag{font-family:var(--mono);font-size:10px;color:var(--tx-2);text-transform:uppercase;letter-spacing:0.1em}
+.cat-cell.up .arr{color:var(--pos)} .cat-cell.up{background:rgba(46,91,75,0.05)}
+.cat-cell.dn .arr{color:var(--neg)} .cat-cell.dn{background:rgba(167,60,60,0.05)}
+.cat-cell.fl .arr{color:var(--tx-4)}
+
+.bars-wrap{background:var(--bg-surface);border:1px solid var(--line);padding:22px 26px;margin-bottom:24px}
+.bars-head{display:flex;justify-content:space-between;align-items:center;margin-bottom:14px;padding-bottom:10px;border-bottom:1px solid var(--line)}
+.bars-head h4{font-family:var(--mono);font-size:10px;text-transform:uppercase;letter-spacing:0.16em;color:var(--tx-3);margin:0}
+.bars-head .legend{display:flex;gap:14px;font-family:var(--mono);font-size:9.5px;color:var(--tx-3);text-transform:uppercase;letter-spacing:0.12em}
+.bars-head .legend span{display:flex;align-items:center;gap:5px}
+.bars-head .legend i{width:10px;height:10px;display:inline-block}
+.bars-canvas{position:relative}
+
+.affected-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(290px,1fr));gap:0;border-top:1px solid var(--line);border-left:1px solid var(--line)}
+.aff-card{background:var(--bg-surface);border-right:1px solid var(--line);border-bottom:1px solid var(--line);padding:18px 22px;display:flex;flex-direction:column;gap:10px;transition:background .15s}
+.aff-card:hover{background:var(--bg-elev)}
+.aff-card .aff-name,.aff-card .aff-vals,.aff-card .aff-delta,.aff-card .aff-mini{cursor:pointer}
+.aff-explain-btn{font-family:var(--mono);font-size:9.5px;background:var(--bg-page);border:1px solid var(--line);color:var(--tx-1);padding:6px 10px;cursor:pointer;text-transform:uppercase;letter-spacing:0.12em;align-self:flex-start;margin-top:6px;display:flex;align-items:center;gap:5px;transition:all .15s}
+.aff-explain-btn:hover{background:var(--bg-ink);color:var(--bg-page);border-color:var(--bg-ink)}
+.aff-explain-btn::after{content:'+';font-family:var(--mono);font-weight:500;transition:transform .2s}
+.aff-explain-btn.open::after{content:'×'}
+.aff-explain{display:none;background:var(--bg-page);border-left:3px solid var(--gold);padding:14px 16px;font-size:13px;color:var(--tx-2);line-height:1.7;font-weight:300;margin-top:6px;animation:fadeUp .25s}
+.aff-explain.open{display:block}
+.aff-explain strong{color:var(--tx-1);font-weight:500}
+.aff-explain em{color:var(--tx-1);font-style:normal;font-weight:500;background:rgba(214,168,72,0.15);padding:1px 5px}
+.aff-explain p+p{margin-top:8px}
+.aff-explain .path{font-family:var(--mono);font-size:11px;color:var(--tx-3);text-transform:uppercase;letter-spacing:0.1em;padding-top:8px;margin-top:8px;border-top:1px solid var(--line)}
+.aff-top{display:flex;justify-content:space-between;align-items:center;gap:8px}
+.aff-name{font-size:13px;color:var(--tx-2);font-weight:400;line-height:1.3;letter-spacing:-0.005em;flex:1}
+.aff-timing{font-family:var(--mono);font-size:8.5px;text-transform:uppercase;letter-spacing:0.12em;color:var(--tx-3);border:1px solid var(--line);padding:3px 6px;white-space:nowrap}
+.aff-vals{display:flex;align-items:baseline;gap:10px;font-family:var(--mono);margin-top:2px}
+.aff-cur{font-size:13px;color:var(--tx-4);text-decoration:line-through}
+.aff-proj{font-size:28px;font-weight:500;letter-spacing:-0.015em;color:var(--tx-1);line-height:1}
+.aff-proj .u{font-size:11px;color:var(--tx-3);font-weight:400;margin-left:3px}
+.aff-delta{display:flex;align-items:center;gap:8px;font-family:var(--mono);font-size:11px;text-transform:uppercase;letter-spacing:0.08em}
+.aff-delta .d.pos{color:var(--pos)}
+.aff-delta .d.neg{color:var(--neg)}
+.aff-strength{margin-left:auto;font-family:var(--mono);font-size:9px;padding:3px 7px;border:1px solid var(--line);text-transform:uppercase;letter-spacing:0.12em;color:var(--tx-2)}
+.aff-mini{height:32px;position:relative;margin:4px 0}
+.aff-mini .axis{position:absolute;top:50%;left:0;right:0;height:1px;background:var(--line)}
+.aff-mini .tick{position:absolute;top:50%;transform:translateY(-50%);width:1px;height:9px;background:var(--tx-4)}
+.aff-mini .target{position:absolute;top:50%;transform:translateY(-50%);width:7px;height:7px;background:var(--gold);border-radius:50%;z-index:2}
+.aff-mini .from{position:absolute;top:50%;transform:translateY(-50%);width:9px;height:9px;background:var(--bg-page);border:2px solid var(--tx-3);border-radius:50%;z-index:3}
+.aff-mini .to{position:absolute;top:50%;transform:translateY(-50%);width:11px;height:11px;background:var(--bg-ink);border-radius:50%;z-index:4;transition:left .8s cubic-bezier(.4,0,.2,1)}
+.aff-mini .arrow-line{position:absolute;top:50%;height:2px;transform:translateY(-50%);transition:width .8s cubic-bezier(.4,0,.2,1),left .8s cubic-bezier(.4,0,.2,1);z-index:1}
+.aff-mini .arrow-line.pos{background:var(--pos)}
+.aff-mini .arrow-line.neg{background:var(--neg)}
+.aff-chains{font-size:11.5px;color:var(--tx-3);line-height:1.55;border-top:1px solid var(--line);padding-top:10px;margin-top:auto;font-weight:300}
+.aff-chains strong{color:var(--tx-2);font-weight:500}
+
+.sim-cta{margin-top:24px;display:flex;gap:10px;flex-wrap:wrap}
+
+/* LEARN */
+.learn-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(360px,1fr));gap:0;border-top:1px solid var(--line);border-left:1px solid var(--line)}
+.learn-card{background:var(--bg-surface);border-right:1px solid var(--line);border-bottom:1px solid var(--line);padding:24px 26px;cursor:pointer;transition:background .2s;display:flex;flex-direction:column;gap:10px;min-height:200px}
+.learn-card:hover{background:var(--bg-elev)}
+.lc-cat{font-family:var(--mono);font-size:9.5px;text-transform:uppercase;letter-spacing:0.16em;color:var(--tx-3);display:flex;justify-content:space-between;align-items:center}
+.lc-title{font-family:var(--serif);font-size:24px;font-weight:500;letter-spacing:-0.01em;line-height:1.15;color:var(--tx-1)}
+.lc-desc{font-size:13.5px;color:var(--tx-2);line-height:1.55;flex:1;font-weight:300}
+.lc-more{font-family:var(--mono);font-size:10px;text-transform:uppercase;letter-spacing:0.16em;color:var(--tx-1);display:flex;align-items:center;gap:8px;margin-top:auto}
+.lc-more::after{content:'→';font-family:var(--sans)}
+
+/* CTX BANNER (deep-dive context-aware) */
+.ctx-banner{padding:18px 56px;border-bottom:1px solid var(--line);background:var(--bg-elev)}
+.ctx-banner .ctx-eye{font-family:var(--mono);font-size:10px;text-transform:uppercase;letter-spacing:0.18em;color:var(--tx-3);margin-bottom:8px;display:flex;align-items:center;gap:8px}
+.ctx-banner .ctx-eye::before{content:'';width:18px;height:1px;background:var(--gold)}
+.ctx-banner p{font-family:var(--serif);font-size:18px;font-style:italic;color:var(--tx-1);line-height:1.5;font-weight:400}
+.ctx-banner p strong{font-style:normal;font-weight:600;color:var(--tx-1)}
+.ctx-banner p em{font-style:normal;font-family:var(--mono);font-size:0.85em;color:var(--gold-d);background:rgba(214,168,72,0.12);padding:1px 5px}
+.ctx-snap{background:linear-gradient(180deg,rgba(46,91,75,0.04) 0%,var(--bg-elev) 100%)}
+.ctx-sim{background:linear-gradient(180deg,rgba(214,168,72,0.06) 0%,var(--bg-elev) 100%)}
+.ctx-cmp{background:linear-gradient(180deg,rgba(28,28,26,0.04) 0%,var(--bg-elev) 100%)}
+
+/* DEEP-DIVE MODAL */
+.dd-back{position:fixed;inset:0;background:rgba(28,28,26,0.6);backdrop-filter:blur(6px);z-index:900;display:flex;align-items:flex-start;justify-content:center;padding:40px 24px;overflow-y:auto;animation:fadeIn .25s}
+@keyframes fadeIn{from{opacity:0}to{opacity:1}}
+.dd-modal{max-width:980px;width:100%;background:var(--bg-page);border:1px solid var(--line);position:relative;animation:slideUp .35s}
+@keyframes slideUp{from{transform:translateY(20px);opacity:0}to{transform:translateY(0);opacity:1}}
+.dd-head{padding:48px 56px 28px;border-bottom:1px solid var(--line);background:var(--bg-surface);position:relative}
+.dd-close{position:absolute;top:18px;right:18px;width:36px;height:36px;border:1px solid var(--line);background:var(--bg-page);cursor:pointer;display:flex;align-items:center;justify-content:center;font-size:18px;color:var(--tx-2)}
+.dd-close:hover{border-color:var(--bg-ink);color:var(--tx-1)}
+.dd-eyebrow{font-family:var(--mono);font-size:10.5px;text-transform:uppercase;letter-spacing:0.18em;color:var(--tx-3);margin-bottom:14px;display:flex;gap:16px}
+.dd-eyebrow span+span::before{content:'·';margin-right:14px;color:var(--tx-4)}
+.dd-title{font-family:var(--serif);font-size:46px;font-weight:500;letter-spacing:-0.022em;line-height:1.04;color:var(--tx-1);margin-bottom:18px}
+.dd-lede{font-family:var(--serif);font-size:19px;font-style:italic;color:var(--tx-2);max-width:640px;line-height:1.5;font-weight:400}
+.dd-body{display:grid;grid-template-columns:1.6fr 1fr;gap:48px;padding:40px 56px}
+.dd-section{margin-bottom:32px}
+.dd-section h4{font-family:var(--mono);font-size:10px;text-transform:uppercase;letter-spacing:0.18em;color:var(--tx-3);margin-bottom:14px;padding-bottom:8px;border-bottom:1px solid var(--line)}
+.dd-section p,.dd-section li{font-size:15.5px;line-height:1.75;color:var(--tx-2);font-weight:300}
+.dd-section ul{padding-left:18px;margin-top:8px}
+.dd-section li{margin-bottom:6px}
+.dd-section strong{color:var(--tx-1);font-weight:500}
+.dd-cheatsheet{background:var(--bg-surface);border:1px solid var(--line);padding:28px;position:sticky;top:24px;align-self:start}
+.dd-cheatsheet h5{font-family:var(--mono);font-size:10px;text-transform:uppercase;letter-spacing:0.18em;color:var(--tx-3);margin-bottom:18px;padding-bottom:10px;border-bottom:1px solid var(--line)}
+.cs-row{display:flex;justify-content:space-between;padding:10px 0;border-bottom:1px solid var(--line);font-size:13px;align-items:baseline;gap:12px}
+.cs-row:last-of-type{border-bottom:none}
+.cs-row .k{color:var(--tx-3);font-family:var(--mono);font-size:10px;text-transform:uppercase;letter-spacing:0.1em;flex-shrink:0}
+.cs-row .v{font-family:var(--mono);color:var(--tx-1);text-align:right;font-size:12.5px}
+.cs-chart{height:120px;margin-top:18px;padding-top:18px;border-top:1px solid var(--line)}
+.dd-current{font-family:var(--mono);font-size:42px;font-weight:500;color:var(--tx-1);line-height:1;margin-bottom:8px;letter-spacing:-0.02em}
+.dd-current .u{font-size:14px;color:var(--tx-3);margin-left:6px;font-weight:400}
+.dd-pos{font-family:var(--mono);font-size:11px;text-transform:uppercase;letter-spacing:0.14em;color:var(--tx-2);padding:5px 0;border-top:1px solid var(--line);margin-top:4px}
+
+/* DATA FETCH PANEL */
+.fetch-panel{background:var(--bg-elev);border:1px solid var(--line);padding:22px 26px;margin-bottom:22px}
+.fp-head{display:flex;justify-content:space-between;align-items:center;margin-bottom:14px}
+.fp-title{font-family:var(--serif);font-size:20px;font-style:italic;color:var(--tx-1)}
+.fp-actions{display:flex;gap:8px;flex-wrap:wrap}
+
+/* QUIZ */
+/* QUIZ */
+.quiz-cats{display:flex;flex-wrap:wrap;gap:6px;margin-bottom:20px}
+.qc-btn{font-family:var(--mono);font-size:10.5px;padding:8px 12px;background:var(--bg-surface);border:1px solid var(--line);color:var(--tx-1);cursor:pointer;text-transform:uppercase;letter-spacing:0.12em;display:flex;align-items:center;gap:8px;transition:all .15s}
+.qc-btn:hover{border-color:var(--bg-ink)}
+.qc-btn.on{background:var(--bg-ink);color:var(--bg-page);border-color:var(--bg-ink)}
+.qc-btn .qc-n{font-size:9.5px;padding:2px 6px;background:var(--bg-page);color:var(--tx-2);border:1px solid var(--line)}
+.qc-btn.on .qc-n{background:rgba(251,249,244,0.15);color:var(--bg-page);border-color:transparent}
+.quiz-meta{display:flex;align-items:center;gap:18px;margin-bottom:18px}
+.qm-prog,.qm-score{font-family:var(--mono);font-size:11px;color:var(--tx-3);text-transform:uppercase;letter-spacing:0.14em;white-space:nowrap}
+.qm-prog strong,.qm-score strong{color:var(--tx-1);font-weight:500}
+.qm-bar{flex:1;height:3px;background:var(--line);position:relative;overflow:hidden}
+.qm-fill{position:absolute;top:0;left:0;bottom:0;background:var(--bg-ink);transition:width .35s ease}
+.q-tag{font-family:var(--mono);font-size:9.5px;text-transform:uppercase;letter-spacing:0.18em;color:var(--tx-3);margin-bottom:14px;padding:3px 8px;border:1px solid var(--line);align-self:flex-start;display:inline-block}
+.q-diagram{margin:0 0 18px;padding:14px;background:var(--bg-page);border:1px solid var(--line);display:flex;justify-content:center}
+.q-diagram svg{max-width:100%;height:auto}
+.quiz-card{background:var(--bg-surface);border:1px solid var(--line);padding:32px 36px;margin-bottom:18px}
+.q-question{font-family:var(--serif);font-size:24px;line-height:1.3;font-weight:500;color:var(--tx-1);margin-bottom:22px;letter-spacing:-0.01em}
+.q-options{display:flex;flex-direction:column;gap:8px}
+.q-opt{padding:14px 18px;border:1px solid var(--line);background:var(--bg-page);cursor:pointer;text-align:left;font-family:var(--sans);font-size:14px;color:var(--tx-1);transition:all .15s}
+.q-opt:hover{border-color:var(--bg-ink)}
+.q-opt.correct{background:rgba(46,91,75,0.1);border-color:var(--pos);color:var(--pos)}
+.q-opt.wrong{background:rgba(167,60,60,0.08);border-color:var(--neg);color:var(--neg)}
+.q-explain{margin-top:18px;padding:16px;background:var(--bg-elev);border-left:3px solid var(--gold);font-size:14px;color:var(--tx-2);line-height:1.6}
+
+/* ABOUT */
+.about-grid{display:grid;grid-template-columns:1fr 1fr;gap:0;border-top:1px solid var(--line);border-left:1px solid var(--line);margin-bottom:60px}
+.about-cell{padding:32px 36px;border-right:1px solid var(--line);border-bottom:1px solid var(--line);background:var(--bg-surface)}
+.about-cell h4{font-family:var(--serif);font-size:24px;font-weight:500;margin-bottom:12px;color:var(--tx-1)}
+.about-cell p{color:var(--tx-2);font-size:15px;line-height:1.7;font-weight:300}
+.persona-row{display:grid;grid-template-columns:repeat(3,1fr);gap:0;border:1px solid var(--line);background:var(--bg-surface);margin-bottom:32px}
+.persona{padding:28px;border-right:1px solid var(--line);text-align:center}
+.persona:last-child{border-right:none}
+.persona .n{font-family:var(--mono);font-size:32px;color:var(--gold-d);margin-bottom:8px;font-weight:500}
+.persona .l{font-family:var(--serif);font-size:18px;color:var(--tx-1);margin-bottom:4px}
+.persona .d{font-size:12.5px;color:var(--tx-3);line-height:1.5}
+
+/* HEATMAP */
+.heat-wrap{background:var(--bg-surface);border:1px solid var(--line);padding:28px;overflow-x:auto}
+.heat-tbl{border-collapse:collapse;width:100%;font-family:var(--mono);font-size:10px}
+.heat-tbl th,.heat-tbl td{padding:6px 8px;text-align:center;border:1px solid var(--line);color:var(--tx-2)}
+.heat-tbl th{background:var(--bg-elev);color:var(--tx-3);text-transform:uppercase;letter-spacing:0.08em;font-weight:500;font-size:9px}
+.heat-tbl th.rh{text-align:left;font-size:9px;max-width:140px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.heat-cell{width:36px;height:36px;display:block;text-align:center;line-height:24px}
+
+/* DISCLAIMER */
+.disc{font-size:12px;color:var(--tx-3);line-height:1.7;padding:24px;border:1px dashed var(--line);background:var(--bg-elev);font-weight:300}
+
+/* LOADER */
+.spin{display:inline-block;width:12px;height:12px;border:2px solid var(--line);border-top-color:var(--bg-ink);border-radius:50%;animation:spin .8s linear infinite}
+@keyframes spin{to{transform:rotate(360deg)}}
+
+@media(max-width:1100px){
+  .sim-grid{grid-template-columns:1fr}
+  .sim-controls{position:static;max-height:none}
+  .sim-hero{grid-template-columns:1fr}
+  .sim-hero .cell{border-right:none;border-bottom:1px solid var(--line)}
+  .cat-strip{grid-template-columns:repeat(4,1fr)}
+  .cat-cell:nth-child(4n){border-right:none}
+  .cat-cell:nth-child(-n+4){border-bottom:1px solid var(--line)}
+  .dd-body{grid-template-columns:1fr;padding:32px}
+  .hero-grid{grid-template-columns:1fr;gap:32px}
+}
+@media(max-width:900px){
+  .container{grid-template-columns:1fr;padding:18px}
+  .sidebar{display:none}
+  .nav-inner{padding:12px 18px;flex-wrap:wrap;gap:14px}
+  .nav-search{display:none}
+  .about-grid{grid-template-columns:1fr}
+  .persona-row{grid-template-columns:1fr}
+  .score-wrap{grid-template-columns:1fr}
+  .score-cell{border-right:none;border-bottom:1px solid var(--line)}
+  .dd-modal{margin:0}
+  .dd-head{padding:32px 24px 20px}
+  .dd-body{padding:24px}
+}
+</style>
+</head>
+<body>
+
+<div class="nav">
+  <div class="nav-inner">
+    <div class="brand"><span class="dot"></span>India <em>Macro</em> Lens</div>
+    <div class="nav-tabs" data-testid="main-nav-tabs">
+      <button class="tab-btn active" data-tab="about" data-testid="nav-tab-about">About</button>
+      <button class="tab-btn" data-tab="snapshot" data-testid="nav-tab-snapshot">Snapshot</button>
+      <button class="tab-btn" data-tab="compare" data-testid="nav-tab-compare">Compare</button>
+      <button class="tab-btn" data-tab="simulate" data-testid="nav-tab-simulate">Simulate</button>
+      <button class="tab-btn" data-tab="learn" data-testid="nav-tab-learn">Learn</button>
+      <button class="tab-btn" data-tab="quiz" data-testid="nav-tab-quiz">Quiz</button>
+    </div>
+    <div class="nav-search">
+      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="7"/><path d="m21 21-4.3-4.3"/></svg>
+      <input id="globalSearch" placeholder="Search indicators…" data-testid="global-search-input"/>
+    </div>
+    <div class="live-pill" data-testid="live-status"><span class="dotp"></span><span id="liveTxt">Loading data…</span></div>
+  </div>
+</div>
+
+<div class="container">
+  <aside class="sidebar" id="sidebar"></aside>
+  <main class="main" id="main"></main>
+</div>
+
+<script>
+// ─── INDICATOR DATA ─────────────────────────────────
+const CATS = {
+  gdp:{label:'GDP & Growth',short:'GDP'},
+  inflation:{label:'Inflation',short:'INF'},
+  monetary:{label:'Monetary Policy',short:'MON'},
+  labor:{label:'Employment',short:'LAB'},
+  trade:{label:'External Trade',short:'TRD'},
+  fiscal:{label:'Government',short:'FIS'},
+  business:{label:'Business Activity',short:'BUS'},
+  consumer:{label:'Consumer',short:'CON'},
+};
+
+// type: lead/coin/lag. wb: world bank code (annual) or null. fb: fallback value with date.
+const INDICATORS = [
+  {id:'quarterly_gdp_growth',cat:'gdp',name:'Quarterly GDP Growth',unit:'%',type:'coin',
+   target:7,wl:5,wh:9,wb:null,fb:{v:7.4,d:'Q2 FY26'},
+   what:'How fast India\'s economy grew in the latest quarter compared with the same quarter last year.',
+   why:'Captures the freshest economic momentum. It\'s the first big signal that the cycle is turning up — or down — before annual numbers catch up.',
+   example:'When quarterly GDP jumped from 6.1% to 7.4%, markets sniffed an accelerating cycle six months before annual numbers confirmed it.',
+   how:'Look for two consecutive surprises in the same direction. A single beat can be a base effect; a trend is a turn.',
+   pitfall:'Quarterly numbers are revised heavily. Treat the first print as a draft, not a verdict.',
+   impacts:[{to:'unemployment',str:'high',dir:'neg',note:'Faster growth absorbs labour slack'},{to:'loan_growth',str:'high',dir:'pos',note:'Demand for credit rises'},{to:'fiscal_deficit',str:'mid',dir:'neg',note:'Tax buoyancy improves'}]},
+  {id:'gdp_growth',cat:'gdp',name:'Annual GDP Growth',unit:'%',type:'coin',
+   target:7,wl:5,wh:9,wb:'NY.GDP.MKTP.KD.ZG',fb:{v:6.5,d:'FY25'},
+   what:'The full-year change in the inflation-adjusted value of everything India produces.',
+   why:'The headline scorecard. Above 7% places India among the world\'s fastest growers; below 5% raises red flags about lost momentum and unemployment.',
+   example:'India grew 8.2% in FY23 — the economy added roughly the size of Greece in twelve months.',
+   how:'Compare the print to potential growth (~6.5–7%). Above potential = inflation pressure later. Below = slack rising.',
+   pitfall:'Real vs nominal. Always read the real (inflation-adjusted) number unless you\'re tracking tax revenue.',
+   impacts:[{to:'unemployment',str:'high',dir:'neg'},{to:'loan_growth',str:'high',dir:'pos'},{to:'fiscal_deficit',str:'mid',dir:'neg'}]},
+  {id:'gfcf',cat:'gdp',name:'Gross Fixed Capital Formation',unit:'% of GDP',type:'lead',
+   target:32,wl:28,wh:40,wb:'NE.GDI.FTOT.ZS',fb:{v:30.8,d:'FY25'},
+   what:'The share of national output being plowed back into factories, roads, machines and buildings.',
+   why:'Today\'s investment is tomorrow\'s capacity. India needs sustained 32%+ to lock in 7% real growth.',
+   example:'GFCF rising from 27% to 31% over FY21–25 underpinned India\'s post-pandemic growth surge.',
+   how:'Watch private vs government share. Private capex revival is the holy grail; pure government push has diminishing returns.',
+   pitfall:'High GFCF in real estate alone can mask weak productive investment.',
+   impacts:[{to:'gdp_growth',str:'high',dir:'pos'},{to:'industrial_prod',str:'mid',dir:'pos'},{to:'unemployment',str:'mid',dir:'neg'}]},
+  {id:'inflation',cat:'inflation',name:'CPI Inflation',unit:'%',type:'coin',
+   target:4,wl:2,wh:6,wb:'FP.CPI.TOTL.ZG',fb:{v:5.2,d:'Latest mo.'},
+   what:'How much pricier a fixed basket of household goods and services has become versus a year ago.',
+   why:'RBI\'s mandate: keep it at 4% ±2%. Breach the top and rates rise; fall below and demand looks weak.',
+   example:'When CPI crossed 7% in mid-2022, RBI hiked rates 250 bps in 11 months, cooling growth.',
+   how:'Strip out volatile food and fuel for core inflation. Sticky core = harder for RBI to cut.',
+   pitfall:'Headline CPI lurches with vegetables and crude. Don\'t over-react to one month.',
+   impacts:[{to:'interest_rate',str:'high',dir:'pos',note:'RBI hikes to anchor expectations'},{to:'consumer_spending',str:'mid',dir:'neg'},{to:'consumer_conf',str:'mid',dir:'neg'}]},
+  {id:'food_inflation',cat:'inflation',name:'Food Inflation',unit:'%',type:'lead',
+   target:4,wl:2,wh:8,wb:null,fb:{v:7.1,d:'Latest mo.'},
+   what:'Year-on-year price rise specifically in food — cereals, vegetables, pulses, dairy, edible oils.',
+   why:'Food is ~46% of India\'s CPI basket. Any spike from a bad monsoon or supply shock feeds straight into headline inflation.',
+   example:'Tomato prices tripling after erratic rains in 2023 pushed food inflation to 12%, dragging CPI to 7.4%.',
+   how:'Watch monsoon, MSPs and reservoir levels. Vegetable prices spike fast and fade fast; cereals stick.',
+   pitfall:'Don\'t mistake supply shocks for demand-side inflation. The fix is logistics, not rate hikes.',
+   impacts:[{to:'inflation',str:'high',dir:'pos'},{to:'consumer_spending',str:'mid',dir:'neg'}]},
+  {id:'wpi',cat:'inflation',name:'WPI Manufacturing',unit:'%',type:'lead',
+   target:3,wl:0,wh:6,wb:null,fb:{v:2.3,d:'Latest mo.'},
+   what:'Price change at the factory gate — what manufacturers charge before goods reach shop shelves.',
+   why:'WPI leads CPI by roughly 2–3 months. Rising factory prices get passed on to consumers.',
+   example:'A WPI manufacturing print of 5% typically pulls CPI up 8–12 weeks later.',
+   how:'Read alongside crude and metal prices. Imported input cost shocks show up here first.',
+   pitfall:'WPI excludes services. India is a services-heavy economy now, so WPI alone is incomplete.',
+   impacts:[{to:'inflation',str:'high',dir:'pos'}]},
+  {id:'interest_rate',cat:'monetary',name:'RBI Repo Rate',unit:'%',type:'lead',
+   target:6,wl:4,wh:8,wb:null,fb:{v:5.5,d:'Latest decision'},
+   what:'The overnight rate at which the RBI lends money to commercial banks.',
+   why:'The master lever. A hike makes loans expensive, cools demand and inflation. A cut does the opposite.',
+   example:'When RBI cut rates from 6.5% to 5.5% over 2025, EMIs on a ₹50 lakh home loan fell by ~₹1,500/month.',
+   how:'Watch RBI\'s stance words: "withdrawal of accommodation", "neutral", "accommodative". Stance often shifts before rates.',
+   pitfall:'Rate cuts take 6–9 months to show up in growth. Don\'t expect overnight miracles.',
+   impacts:[{to:'loan_growth',str:'high',dir:'neg'},{to:'inflation',str:'high',dir:'neg'},{to:'gdp_growth',str:'mid',dir:'neg',note:'Hikes slow demand'}]},
+  {id:'money_m3',cat:'monetary',name:'Money Supply M3',unit:'% YoY',type:'lead',
+   target:10,wl:7,wh:15,wb:null,fb:{v:9.8,d:'Latest mo.'},
+   what:'Total money circulating in the economy — cash, demand deposits, time deposits — growing at this annual pace.',
+   why:'Excess money chasing the same goods eventually shows up as inflation. M3 is the early warning system.',
+   example:'Friedman\'s rule of thumb: M3 growth above 10% sustained 18 months tends to lift inflation.',
+   how:'Compare M3 to nominal GDP growth. Persistently higher M3 = inflationary tilt.',
+   pitfall:'Velocity of money changes; high M3 alone doesn\'t guarantee inflation if demand for money is also high.',
+   impacts:[{to:'inflation',str:'high',dir:'pos'},{to:'loan_growth',str:'mid',dir:'pos'}]},
+  {id:'loan_growth',cat:'monetary',name:'Credit / Loan Growth',unit:'% YoY',type:'lead',
+   target:14,wl:8,wh:18,wb:null,fb:{v:11.5,d:'Latest fortnight'},
+   what:'How fast banks are disbursing new loans to businesses and households.',
+   why:'Credit is the oxygen of growth. 12–16% is healthy. Below 8% suggests demand drought; above 18% hints at bubble risk.',
+   example:'When loan growth fell to 5% in 2020, businesses couldn\'t fund operations and GDP contracted 7.3%.',
+   how:'Split into industry, services, retail. Retail (home, auto) leads sentiment; industry leads capex.',
+   pitfall:'Watch for evergreening — banks rolling over bad loans can inflate growth numbers.',
+   impacts:[{to:'gdp_growth',str:'high',dir:'pos'},{to:'gfcf',str:'mid',dir:'pos'}]},
+  {id:'forex',cat:'monetary',name:'Forex Reserves',unit:'USD Bn',type:'lag',
+   target:650,wl:300,wh:800,wb:'FI.RES.TOTL.CD',fb:{v:692,d:'Latest week'},
+   what:'Foreign currency, gold and SDRs held by RBI as a buffer against external shocks.',
+   why:'India\'s financial insurance. 9+ months of import cover means resilience; falling reserves stress the rupee.',
+   example:'India\'s $688B reserves cover ~11 months of imports — comfortably above the 3-month minimum.',
+   how:'Watch reserves alongside the rupee. A falling rupee with falling reserves means RBI is actively intervening.',
+   pitfall:'Reserves can also fall due to revaluation, not just intervention. Read the breakdown.',
+   impacts:[{to:'inflation',str:'mid',dir:'neg',note:'Higher reserves = stronger rupee = cheaper imports'}]},
+  {id:'unemployment',cat:'labor',name:'Unemployment Rate',unit:'%',type:'lag',
+   target:4,wl:3,wh:8,wb:'SL.UEM.TOTL.ZS',fb:{v:7.8,d:'CMIE latest'},
+   what:'Share of the labour force actively seeking but unable to find work (CMIE measure).',
+   why:'A lagging indicator — it rises after growth has already slowed. But persistently high unemployment kills consumer demand.',
+   example:'When unemployment hit 23% during Covid lockdowns, consumer spending collapsed and the recession deepened.',
+   how:'Pair with labour force participation rate. A "falling" unemployment rate from people giving up is bad news.',
+   pitfall:'India\'s informal sector dwarfs the formal one. Headline unemployment can mask under-employment.',
+   impacts:[{to:'consumer_spending',str:'high',dir:'neg'},{to:'consumer_conf',str:'high',dir:'neg'}]},
+  {id:'trade_balance',cat:'trade',name:'Trade Balance',unit:'USD Bn/mo',type:'coin',
+   target:-15,wl:-25,wh:-5,wb:null,fb:{v:-21.5,d:'Latest mo.'},
+   what:'Monthly merchandise exports minus imports. India\'s number is structurally negative because of oil.',
+   why:'Persistent wide deficits weaken the rupee. A weaker rupee makes everything imported pricier — and India imports a lot of energy.',
+   example:'A monthly trade deficit of $19B annualises to ~$228B — close to 6% of India\'s GDP.',
+   how:'Look at the breakup: oil, gold, electronics. Gold imports spike before festivals; oil moves with crude.',
+   pitfall:'Services trade surplus (IT exports) partly offsets the merchandise deficit. Look at the current account, not just trade.',
+   impacts:[{to:'forex',str:'high',dir:'pos',note:'Wider deficit drains reserves'},{to:'inflation',str:'mid',dir:'pos'}]},
+  {id:'exports',cat:'trade',name:'Exports Growth',unit:'% YoY',type:'lead',
+   target:10,wl:0,wh:20,wb:'NE.EXP.GNFS.KD.ZG',fb:{v:6.4,d:'Latest mo.'},
+   what:'Year-on-year change in merchandise plus services exports — IT, pharma, gems, refined fuel.',
+   why:'Exports bring dollars in. Strong export growth supports the rupee, adds jobs and shrinks the current account deficit.',
+   example:'India\'s IT services exports ($250B+ in FY24) almost single-handedly keep the current account manageable.',
+   how:'Watch electronics and engineering exports — they signal India\'s manufacturing competitiveness.',
+   pitfall:'Global demand drives merchandise exports. A weak global PMI = weak Indian exports, regardless of policy.',
+   impacts:[{to:'forex',str:'high',dir:'pos'},{to:'gdp_growth',str:'mid',dir:'pos'}]},
+  {id:'fdi',cat:'trade',name:'Foreign Direct Investment',unit:'USD Bn/yr',type:'lead',
+   target:70,wl:40,wh:100,wb:null,fb:{v:71,d:'FY25'},
+   what:'Long-term capital invested by foreign companies in Indian businesses, factories and assets.',
+   why:'FDI is patient money — it brings capital, technology and jobs together. Falling FDI is a vote of no-confidence.',
+   example:'Apple\'s manufacturing move into India (2023+) has created 150,000+ jobs and $10B+ of export value annually.',
+   how:'Look at greenfield vs M&A. Greenfield (new factories) is far more growth-positive than mere ownership changes.',
+   pitfall:'Reinvested earnings count as FDI but don\'t represent new dollars coming in.',
+   impacts:[{to:'forex',str:'mid',dir:'pos'},{to:'gfcf',str:'mid',dir:'pos'}]},
+  {id:'fiscal_deficit',cat:'fiscal',name:'Fiscal Deficit / GDP',unit:'%',type:'coin',
+   target:-3.5,wl:-5.5,wh:-2,wb:null,fb:{v:-4.4,d:'FY26 BE'},
+   what:'The amount by which government spending exceeds revenue, expressed as a share of GDP. Negative = deficit.',
+   why:'A wider deficit means more government borrowing, which lifts interest rates and crowds out private investment.',
+   example:'India\'s FY25 fiscal deficit of 4.9% means the centre borrowed roughly ₹16 lakh crore on top of taxes.',
+   how:'Watch the quality of the deficit. Borrowing to invest (capex) is fine; borrowing to give freebies is not.',
+   pitfall:'Off-balance-sheet borrowings (PSU debt) can hide the true fiscal stance.',
+   impacts:[{to:'interest_rate',str:'mid',dir:'pos'},{to:'gfcf',str:'mid',dir:'neg'}]},
+  {id:'govt_spending',cat:'fiscal',name:'Government Capex Growth',unit:'% YoY',type:'lead',
+   target:15,wl:5,wh:30,wb:null,fb:{v:10.1,d:'FY26 BE'},
+   what:'The pace at which the centre is spending on infrastructure — roads, railways, ports, defence assets.',
+   why:'Government capex has a 2–2.5x multiplier. ₹1 of capex creates roughly ₹2–2.5 of economic activity.',
+   example:'Centre capex jumping from ₹4.8 to ₹11.1 lakh crore (FY22→FY25) drove much of India\'s post-Covid revival.',
+   how:'Track execution, not budget. India often allocates strongly but spends slowly.',
+   pitfall:'Capex through PSUs can show up in different line items. Always check the consolidated number.',
+   impacts:[{to:'gdp_growth',str:'high',dir:'pos'},{to:'gfcf',str:'high',dir:'pos'}]},
+  {id:'pmi_mfg',cat:'business',name:'Manufacturing PMI',unit:'index',type:'lead',
+   target:54,wl:48,wh:62,wb:null,fb:{v:57.6,d:'Latest mo.'},
+   what:'A monthly diffusion index from a survey of 400+ factory purchasing managers. >50 = expanding, <50 = contracting.',
+   why:'The earliest signal of factory activity, available 4–6 weeks before official IIP data.',
+   example:'PMI of 58.8 in April 2025 meant factories were hiring, ordering raw materials and ramping output.',
+   how:'Look at sub-indices: new orders (leading), output (current), employment (lagging).',
+   pitfall:'PMI is a diffusion index, not a magnitude. 55 doesn\'t mean 5% growth; it means more firms are growing than shrinking.',
+   impacts:[{to:'industrial_prod',str:'high',dir:'pos'},{to:'gdp_growth',str:'mid',dir:'pos'}]},
+  {id:'pmi_services',cat:'business',name:'Services PMI',unit:'index',type:'lead',
+   target:55,wl:50,wh:63,wb:null,fb:{v:59.2,d:'Latest mo.'},
+   what:'The same diffusion-index methodology applied to service-sector purchasing managers — IT, banking, hospitality, telecom.',
+   why:'Services are 55% of India\'s GDP. Services PMI alone explains a meaningful chunk of GDP movement.',
+   example:'A services PMI of 59.1 reflects booming IT exports, strong domestic banking and surging travel.',
+   how:'Cross-read with services exports and bank credit to services.',
+   pitfall:'Survey biases — large urban firms dominate the panel. The informal services sector is under-represented.',
+   impacts:[{to:'gdp_growth',str:'high',dir:'pos'},{to:'unemployment',str:'mid',dir:'neg'}]},
+  {id:'industrial_prod',cat:'business',name:'Industrial Production (IIP)',unit:'% YoY',type:'coin',
+   target:6,wl:2,wh:12,wb:'NV.IND.MANF.KD.ZG',fb:{v:3.1,d:'Latest mo.'},
+   what:'Official measure of actual manufacturing, mining and electricity output growth.',
+   why:'Confirms what PMI signalled 4–6 weeks earlier — crucial input into GDP estimation.',
+   example:'PMI of 58+ in Q4 FY25 predicted IIP would print strong; when IIP confirmed 6%+, GDP forecasts firmed up.',
+   how:'Look at use-based classification — capital goods (capex), consumer durables (demand), infrastructure (govt).',
+   pitfall:'IIP is volatile and base-sensitive. A single weak month from a base effect isn\'t a trend.',
+   impacts:[{to:'gdp_growth',str:'high',dir:'pos'},{to:'unemployment',str:'mid',dir:'neg'}]},
+  {id:'electricity',cat:'business',name:'Electricity Production',unit:'% YoY',type:'lead',
+   target:8,wl:3,wh:15,wb:null,fb:{v:5.8,d:'Latest mo.'},
+   what:'Growth in total electricity generated by India\'s power plants.',
+   why:'The most honest real-time economic proxy — no lag, no revisions, no surveys. Factories can\'t run without power.',
+   example:'Electricity growth tracks GDP growth almost 1:1 over multi-year horizons.',
+   how:'Strip seasonality. April–June heat-wave demand isn\'t comparable to monsoon months.',
+   pitfall:'Renewables now disrupt the year-on-year comparison because their output depends on weather.',
+   impacts:[{to:'industrial_prod',str:'high',dir:'pos'},{to:'gdp_growth',str:'mid',dir:'pos'}]},
+  {id:'business_conf',cat:'business',name:'Business Confidence',unit:'index',type:'lead',
+   target:110,wl:95,wh:125,wb:null,fb:{v:108,d:'Latest qtr'},
+   what:'RBI\'s quarterly survey: are companies planning to invest, hire, expand capacity?',
+   why:'Companies vote with their wallets. High confidence today = capex and hiring in 2–3 quarters.',
+   example:'Business confidence at 112 in Q4 FY25 predicted the strong capex cycle announced in FY26.',
+   how:'Compare expectations vs current assessment. Optimism about the future = leading signal.',
+   pitfall:'Survey responses are biased by recent news cycles. One election or budget can swing the index.',
+   impacts:[{to:'gfcf',str:'high',dir:'pos'},{to:'unemployment',str:'mid',dir:'neg'}]},
+  {id:'consumer_conf',cat:'consumer',name:'Consumer Confidence',unit:'index',type:'lead',
+   target:100,wl:85,wh:115,wb:null,fb:{v:97,d:'Latest qtr'},
+   what:'RBI\'s survey of household sentiment about jobs, income and the financial future.',
+   why:'Confident consumers spend; anxious ones save. Sentiment leads spending by one quarter.',
+   example:'Consumer confidence collapsed to 48 during Covid — people saved, demand fell, and the slowdown deepened.',
+   how:'Look at the current situation index vs future expectations index. Future-expectations leads spending.',
+   pitfall:'Urban-heavy sampling. Rural sentiment moves on different drivers (monsoon, MSP).',
+   impacts:[{to:'consumer_spending',str:'high',dir:'pos'}]},
+  {id:'consumer_spending',cat:'consumer',name:'Consumer Spending Growth',unit:'% YoY',type:'coin',
+   target:8,wl:4,wh:14,wb:'NE.CON.PRVT.KD.ZG',fb:{v:7.2,d:'FY25'},
+   what:'Growth in private household expenditure — the largest single chunk of India\'s GDP.',
+   why:'Consumer spending = 57% of India\'s GDP. Sustained growth here is the floor under everything else.',
+   example:'A 16% post-Covid festive surge in FY22 spending added roughly 4% to GDP growth single-handedly.',
+   how:'Watch durables (cars, fridges) and discretionary services for the cycle; staples for the floor.',
+   pitfall:'The rich pull spending averages higher. Mass-market consumption can stay weak even as aggregate spending grows.',
+   impacts:[{to:'gdp_growth',str:'high',dir:'pos'},{to:'industrial_prod',str:'mid',dir:'pos'}]},
+];
+
+const IND_MAP = Object.fromEntries(INDICATORS.map(i=>[i.id,i]));
+
+// ─── STATE ─────────────────────────────────────────
+const state = {
+  tab:'about',
+  values:{}, // current values
+  history:{}, // historical series from WB
+  forecast:{},
+  compareIds:['gdp_growth','inflation'],
+  filterType:'all',
+  searchQ:'',
+  loaded:false,
+  charts:{},
+  quizIdx:0, quizScore:0, quizAns:null,
+};
+
+INDICATORS.forEach(i=>{ state.values[i.id]=i.fb.v; });
+
+function clearCharts(){
+  Object.values(state.charts).forEach(c=>{try{c.destroy()}catch(e){}});
+  state.charts={};
+}
+function fmtNum(v,unit){
+  if(v==null||isNaN(v)) return '—';
+  let s = (typeof v==='number') ? (Math.abs(v)>=100 ? v.toFixed(1) : Math.abs(v)>=10? v.toFixed(2) : v.toFixed(2)) : v;
+  return s;
+}
+function statusOf(ind,v){
+  if(v==null||isNaN(v)) return {cls:'',txt:'—'};
+  const {wl,wh,target}=ind;
+  const lo=Math.min(wl,wh), hi=Math.max(wl,wh);
+  if(v<lo||v>hi) return {cls:'bad',txt:'Outside'};
+  const d=Math.abs(v-target)/Math.max(1,Math.abs(hi-lo));
+  if(d<0.25) return {cls:'ok',txt:'On target'};
+  return {cls:'warn',txt:'Drifting'};
+}
+
+// ─── LIVE DATA: BACKEND PROXY (annual WB + monthly IMF/IFS via DBnomics) ─
+const BACKEND = (typeof window!=='undefined' && window.location.origin) || '';
+async function loadLiveData(){
+  document.getElementById('liveTxt').textContent = 'Fetching latest data…';
+  try{
+    const r = await fetch(BACKEND + '/api/macro/indicators');
+    const j = await r.json();
+    const inds = j.indicators || {};
+    Object.entries(inds).forEach(([id,info])=>{
+      if(!IND_MAP[id]) return;
+      state.values[id] = info.value;
+      // Convert history (period+value) to {year,value} for sparkline (use period as label)
+      state.history[id] = info.history.map(p=>({year: p.period, value: p.value}));
+      // Update the indicator's "last update" date for display
+      IND_MAP[id]._period = info.period;
+      IND_MAP[id]._source = info.source;
+    });
+    const monthly = Object.values(inds).filter(i=>i.source && i.source.includes('DBnomics')).length;
+    const annual = Object.values(inds).filter(i=>i.source==='World Bank').length;
+    document.getElementById('liveTxt').textContent =
+      `Live · ${monthly} monthly · ${annual} annual · ${new Date().toLocaleDateString('en-IN',{day:'2-digit',month:'short'})}`;
+  }catch(e){
+    console.warn('Backend proxy unavailable, falling back to direct World Bank:',e);
+    await loadLiveDataDirect();
+  }
+  // Synthetic histories for indicators with no live source
+  INDICATORS.forEach(ind=>{
+    if(!state.history[ind.id]){
+      const base = ind.fb.v, range = (ind.wh-ind.wl)*0.4;
+      const points = [];
+      for(let i=10;i>=0;i--){
+        const yr = new Date().getFullYear()-i;
+        const noise = (Math.sin(i*1.3)+Math.cos(i*0.7))*range*0.25;
+        const drift = (10-i)*0.02*range;
+        points.push({year:String(yr), value: +(base - drift*0.5 + noise).toFixed(2)});
+      }
+      points[points.length-1].value = base;
+      state.history[ind.id]=points;
+    }
+  });
+  state.loaded=true;
+  if(state.tab==='snapshot') renderSnapshot();
+  if(state.tab==='compare') renderCompare();
+}
+// Direct WB fallback if our backend proxy isn't reachable
+async function loadLiveDataDirect(){
+  const live = INDICATORS.filter(i=>i.wb);
+  await Promise.all(live.map(async ind=>{
+    try{
+      const r = await fetch(`https://api.worldbank.org/v2/country/IN/indicator/${ind.wb}?format=json&per_page=30`);
+      const j = await r.json();
+      if(!j[1]) return;
+      const points = j[1].filter(d=>d.value!=null).map(d=>({year:String(d.date), value:+d.value})).sort((a,b)=>a.year.localeCompare(b.year));
+      if(points.length){
+        state.history[ind.id]=points;
+        state.values[ind.id]=points[points.length-1].value;
+      }
+    }catch(e){console.warn('WB direct fail',ind.id,e)}
+  }));
+  document.getElementById('liveTxt').textContent = 'Live · '+new Date().toLocaleDateString('en-IN',{day:'2-digit',month:'short',year:'numeric'});
+}
+
+// ─── SIDEBAR ──────────────────────────────────────
+function renderSidebar(){
+  const sb = document.getElementById('sidebar');
+  let h = `<div class="sb-filter" data-testid="sidebar-filter">
+    <button class="${state.filterType==='all'?'on':''}" onclick="setFilter('all')" data-testid="filter-all">All</button>
+    <button class="${state.filterType==='lead'?'on':''}" onclick="setFilter('lead')" data-testid="filter-lead">Lead</button>
+    <button class="${state.filterType==='coin'?'on':''}" onclick="setFilter('coin')" data-testid="filter-coin">Coin</button>
+    <button class="${state.filterType==='lag'?'on':''}" onclick="setFilter('lag')" data-testid="filter-lag">Lag</button>
+  </div>`;
+  const q = state.searchQ.toLowerCase();
+  Object.entries(CATS).forEach(([cat,meta])=>{
+    const items = INDICATORS.filter(i=>i.cat===cat)
+      .filter(i=>state.filterType==='all'||i.type===state.filterType)
+      .filter(i=>!q||i.name.toLowerCase().includes(q)||i.what.toLowerCase().includes(q));
+    if(!items.length) return;
+    h += `<div class="sb-section"><div class="sb-head">${meta.label}</div>`;
+    items.forEach(i=>{
+      const bc = i.type==='lead'?'b-lead':i.type==='lag'?'b-lag':'b-coin';
+      const lbl = i.type==='lead'?'L':i.type==='lag'?'Lag':'C';
+      h += `<div class="sb-item" onclick="onSbClick('${i.id}')" data-testid="sb-item-${i.id}">${i.name}<span class="sb-badge ${bc}">${lbl}</span></div>`;
+    });
+    h += `</div>`;
+  });
+  if(h.indexOf('sb-section')===-1) h += `<div style="padding:16px;color:var(--tx-3);font-size:12px;font-style:italic">No matches</div>`;
+  sb.innerHTML = h;
+}
+function setFilter(f){state.filterType=f;renderSidebar()}
+function onSbClick(id){
+  if(state.tab==='snapshot'){ const el=document.getElementById('inp-'+id); el&&el.scrollIntoView({behavior:'smooth',block:'center'}); el&&el.focus(); }
+  else if(state.tab==='simulate'){ const el=document.getElementById('fc-'+id); el&&el.scrollIntoView({behavior:'smooth',block:'center'}); }
+  else openDeepDive(id);
+}
+
+// ─── TAB ROUTER ───────────────────────────────────
+function setTab(tab){
+  state.tab=tab;
+  document.querySelectorAll('.tab-btn').forEach(b=>b.classList.toggle('active', b.dataset.tab===tab));
+  clearCharts();
+  renderSidebar();
+  if(tab==='about') renderAbout();
+  else if(tab==='snapshot') renderSnapshot();
+  else if(tab==='compare') renderCompare();
+  else if(tab==='simulate') renderSimulate();
+  else if(tab==='learn') renderLearn();
+  else if(tab==='quiz') renderQuiz();
+  window.scrollTo(0,0);
+}
+
+// ─── ABOUT ─────────────────────────────────────────
+function renderAbout(){
+  document.getElementById('main').innerHTML = `
+<section class="hero">
+  <div class="hero-meta">
+    <span>Independent · Educational</span>
+    <span>Updated ${new Date().toLocaleDateString('en-IN',{day:'2-digit',month:'long',year:'numeric'})}</span>
+    <span>23 Indicators</span>
+  </div>
+  <div class="hero-grid">
+    <div>
+      <div class="eyebrow">A reading guide to India's economy</div>
+      <h1 class="disp">Read the <em>economy</em><br/>like a story —<br/>not a spreadsheet.</h1>
+    </div>
+    <div>
+      <p class="lede">Most resources teach economic indicators as definitions. <strong style="color:var(--tx-1);font-style:normal;font-weight:500">India Macro Lens</strong> teaches them as a conversation — where one moves, the next responds, and the cycle keeps turning.</p>
+      <div style="margin-top:28px;display:flex;gap:10px;flex-wrap:wrap">
+        <button class="btn btn-primary" onclick="setTab('snapshot')" data-testid="cta-snapshot">See the snapshot →</button>
+        <button class="btn btn-secondary" onclick="setTab('learn')" data-testid="cta-learn">Browse indicators</button>
+      </div>
+    </div>
+  </div>
+</section>
+
+<div class="eyebrow">Four ways to use this</div>
+<div class="about-grid">
+  <div class="about-cell"><h4>Snapshot</h4><p>Read all 23 indicators at a glance. Each card shows the current value, where it sits versus its healthy range, and a 10-year sparkline. Click any card to open the deep-dive.</p></div>
+  <div class="about-cell"><h4>Compare</h4><p>Pin up to four indicators on a single chart with synchronised hover and zoom. See how repo rate, inflation and credit growth dance together over a decade.</p></div>
+  <div class="about-cell"><h4>Simulate</h4><p>Pick an indicator, choose Up or Down, and trace the downstream consequences across the economy. The causal graph animates each link — the way macro really works.</p></div>
+  <div class="about-cell"><h4>Learn</h4><p>Every indicator gets an editorial deep-dive: what it really measures, why it matters, how to read it, the common pitfalls, and a quick "Ask AI" handoff for personal questions.</p></div>
+</div>
+
+<div class="eyebrow">Built for</div>
+<div class="persona-row">
+  <div class="persona"><div class="n">01</div><div class="l">Students &amp; learners</div><div class="d">A first principles map to India's macro machine.</div></div>
+  <div class="persona"><div class="n">02</div><div class="l">Young investors</div><div class="d">Train the instinct to ask "what does this mean for rates, growth, the rupee?"</div></div>
+  <div class="persona"><div class="n">03</div><div class="l">Curious citizens</div><div class="d">Decode budget speeches, RBI statements and front-page headlines.</div></div>
+</div>
+
+<h2 class="sec" style="margin:60px 0 8px">A philosophy <em>in one line</em></h2>
+<p class="lede" style="margin-bottom:32px">The objective isn't to memorise indicators. It's to understand <strong style="color:var(--tx-1);font-style:normal;font-weight:600">cause → effect → consequence</strong> — and to do so for India, in India's own context.</p>
+
+<div class="disc">
+  <strong style="color:var(--tx-1)">A note on data &amp; limits.</strong> Annual data comes live from the World Bank's open API. Monthly indicators (PMI, repo rate, trade balance) show the latest editorial estimates; refresh them anytime via the Fetch panel on the Snapshot tab. Forecasts and scenarios are simplifications of a far more complex system — they teach intuition, not prediction. Nothing here is financial, tax or legal advice.
+</div>`;
+}
+
+// ─── SNAPSHOT ──────────────────────────────────────
+const CAT_EXPLAIN = {
+  gdp:{tag:'How fast is the economy growing?',body:'Growth indicators tell you whether India is expanding or slowing. A healthy economy needs ~7% real growth to absorb its young workforce. Watch quarterly numbers for early turning points and GFCF for whether growth is being built on investment (sustainable) or consumption (less so).'},
+  inflation:{tag:'How fast are prices rising?',body:'India\'s inflation is unique — food has 46% weight, so monsoons matter as much as rate policy. RBI targets 4% ± 2%; persistent breaches trigger rate hikes. WPI leads CPI by 2–3 months. Strip volatile food/fuel for the sticky "core" measure that really moves rate decisions.'},
+  monetary:{tag:'What is the cost and availability of money?',body:'The RBI repo rate is the master lever — every 25bp move ripples through home loans, business credit and the rupee. Credit growth is the oxygen of the economy. Forex reserves are India\'s insurance against external shocks. Watch all three for the monetary stance.'},
+  labor:{tag:'Who has work?',body:'Unemployment is a lagging indicator — it rises after growth slows. But informal-sector under-employment is the bigger story India\'s headline number misses. Pair with labour-force participation rate to see whether falling unemployment is real or driven by people giving up.'},
+  trade:{tag:'How does India interact with the world?',body:'India runs a structural goods deficit (oil imports) offset partly by a services surplus (IT exports) and FDI. Watch trade balance for rupee pressure, exports for global competitiveness, FDI for the long-term investment thesis.'},
+  fiscal:{tag:'What is the government doing?',body:'A wider fiscal deficit means more government borrowing, which pushes interest rates up and crowds private investment. But the quality matters — capex spending has a 2–2.5x multiplier; freebies have almost none. Government capex growth is the single best forward indicator for FY+1 growth.'},
+  business:{tag:'What are firms doing?',body:'PMI surveys (manufacturing, services) lead actual output by 4–6 weeks. IIP confirms what PMI signalled. Electricity production is the most honest real-time proxy. Business confidence translates into hiring and capex 2–3 quarters out.'},
+  consumer:{tag:'What are households doing?',body:'Consumer spending is 57% of India\'s GDP — the floor under everything else. Consumer confidence leads spending by one quarter. Look at durables (cars, fridges) for cycle signals; staples for the absolute floor.'},
+};
+
+function renderSnapshot(){
+  const filt = (i)=> (state.filterType==='all'||i.type===state.filterType) &&
+                    (!state.searchQ||i.name.toLowerCase().includes(state.searchQ.toLowerCase()));
+  const indsShown = INDICATORS.filter(filt);
+  const score = computeScore();
+  const phase = computePhase();
+  const story = generateStory();
+  document.getElementById('main').innerHTML = `
+<div class="page">
+  <div class="eyebrow">The economy, at a glance</div>
+  <h1 class="disp" style="margin-bottom:18px">India today,<br/><em>told in numbers.</em></h1>
+  <p class="lede" style="margin-bottom:36px">A single dashboard reading of growth, inflation, money, jobs, trade, government, business activity and consumer spending. Click any card for the full deep-dive — or edit values inline to test your own assumptions.</p>
+
+  <div class="fetch-panel" data-testid="fetch-panel">
+    <div class="fp-head">
+      <div class="fp-title">Refresh data — three ways</div>
+      <div class="fp-actions">
+        <button class="btn btn-secondary" onclick="loadLiveData()" data-testid="refresh-data-btn">↻ Refresh live indicators</button>
+        <button class="btn btn-ai" onclick="copyAIPrompt()" data-testid="copy-ai-prompt-btn">⌘ Copy AI prompt</button>
+        <button class="btn btn-ai" onclick="openAI()" data-testid="open-ai-btn">Open Gemini →</button>
+        <button class="btn btn-ai" onclick="togglePaste()" data-testid="toggle-paste-btn">📋 Paste AI response</button>
+      </div>
+    </div>
+    <p style="font-size:13px;color:var(--tx-3);line-height:1.55">Eight indicators load live through our backend proxy. For the rest, use the workflow: <strong style="color:var(--tx-2)">click "Open Gemini" to auto-send the prompt → paste the response back here</strong>. We will parse the markdown table and auto-fill every indicator we recognise. Or just click any card value to edit it directly.</p>
+    <div id="pasteHost" style="display:none;margin-top:14px">
+      <textarea id="aiPaste" data-testid="ai-paste-area" placeholder="Paste the markdown table response from Gemini here…" style="width:100%;min-height:160px;padding:12px 14px;font-family:var(--mono);font-size:12px;background:var(--bg-page);border:1px solid var(--line);color:var(--tx-1);outline:none;resize:vertical;line-height:1.5"></textarea>
+      <div style="display:flex;gap:8px;margin-top:10px;align-items:center;flex-wrap:wrap">
+        <button class="btn btn-primary" onclick="parsePastedAI()" data-testid="parse-paste-btn">Parse &amp; apply</button>
+        <button class="btn btn-secondary" onclick="document.getElementById('aiPaste').value=''" data-testid="clear-paste-btn">Clear</button>
+        <span id="parseStatus" style="font-family:var(--mono);font-size:11px;color:var(--tx-3);text-transform:uppercase;letter-spacing:0.12em"></span>
+      </div>
+    </div>
+  </div>
+
+  <div class="score-wrap" data-testid="score-wrap">
+    <div class="score-cell">
+      <div class="eyebrow" style="margin-bottom:8px">Economy Score</div>
+      <div class="score-num" data-testid="score-num">${score}<small>/100</small></div>
+      <div style="font-family:var(--mono);font-size:11px;color:var(--tx-3);margin-top:8px;text-transform:uppercase;letter-spacing:0.14em">Composite of ${indsShown.length} indicators vs target ranges</div>
+    </div>
+    <div class="score-cell">
+      <div class="eyebrow" style="margin-bottom:8px">Cycle Phase</div>
+      <div class="score-phase" data-testid="cycle-phase">${phase.name}</div>
+      <div class="cycle-track"><div class="cycle-dot" style="left:${phase.pos}%"></div></div>
+      <div class="cycle-labels"><span>Contraction</span><span>Trough</span><span>Expansion</span><span>Peak</span></div>
+    </div>
+  </div>
+
+  <div class="story-card" data-testid="today-story">
+    <div class="eyebrow" style="margin-bottom:10px">Today's story</div>
+    <p class="story-body">${story}</p>
+  </div>
+
+  ${Object.entries(CATS).map(([catId, meta])=>{
+    const indsInCat = indsShown.filter(i=>i.cat===catId);
+    if(!indsInCat.length) return '';
+    const exp = CAT_EXPLAIN[catId];
+    return `
+    <div class="cat-section" data-testid="cat-section-${catId}">
+      <div class="cat-section-head">
+        <div>
+          <div class="cs-cat">${meta.label}</div>
+          <div class="cs-tag">${exp?exp.tag:''}</div>
+        </div>
+        <div class="cs-count">${indsInCat.length} indicator${indsInCat.length>1?'s':''}</div>
+      </div>
+      <p class="cs-body">${exp?exp.body:''}</p>
+      <div class="snap-grid">
+        ${indsInCat.map(ind=>renderIndCard(ind)).join('')}
+      </div>
+    </div>`;
+  }).join('')}
+</div>`;
+  setTimeout(()=>{
+    indsShown.forEach(ind=>drawSparkline('spark-'+ind.id, state.history[ind.id]||[], ind));
+  },50);
+}
+
+function renderIndCard(ind){
+  const v = state.values[ind.id];
+  const st = statusOf(ind,v);
+  return `
+  <div class="ind-card" data-testid="ind-card-${ind.id}">
+    <div class="ic-top">
+      <div class="ic-name" onclick="openDeepDive('${ind.id}','snapshot')">${ind.name}</div>
+      <div class="ic-cat">${CATS[ind.cat].short}</div>
+    </div>
+    <div class="ic-val-row">
+      <div class="ic-val" data-testid="ind-val-${ind.id}" id="val-${ind.id}" onclick="editValue('${ind.id}')">${fmtNum(v,ind.unit)}<span class="u">${ind.unit}</span></div>
+      <button class="ic-edit" onclick="editValue('${ind.id}')" data-testid="ic-edit-${ind.id}" title="Edit value">✎</button>
+    </div>
+    <div class="ic-meta">
+      <span>Target ${ind.target}${ind.unit==='%'?'%':''}</span>
+      <span class="ic-status ${st.cls}">${st.txt}</span>
+    </div>
+    <div class="ic-spark" onclick="openDeepDive('${ind.id}','snapshot')"><canvas id="spark-${ind.id}"></canvas></div>
+  </div>`;
+}
+
+function editValue(id){
+  const cell = document.getElementById('val-'+id);
+  if(!cell) return;
+  const ind = IND_MAP[id];
+  const cur = state.values[id];
+  cell.innerHTML = `<input type="number" step="0.01" value="${cur}" data-testid="edit-val-${id}" style="font-family:var(--mono);font-size:24px;font-weight:500;width:90px;background:var(--bg-page);border:1px solid var(--bg-ink);padding:2px 6px;outline:none;color:var(--tx-1)" onblur="commitEdit('${id}',this.value)" onkeydown="if(event.key==='Enter')this.blur();if(event.key==='Escape')renderSnapshot()"/><span class="u">${ind.unit}</span>`;
+  cell.querySelector('input').focus();
+  cell.querySelector('input').select();
+}
+function commitEdit(id, val){
+  const n = parseFloat(val);
+  if(!isNaN(n)) state.values[id] = n;
+  renderSnapshot();
+}
+
+function togglePaste(){
+  const host = document.getElementById('pasteHost');
+  host.style.display = host.style.display === 'none' ? 'block' : 'none';
+  if(host.style.display === 'block') document.getElementById('aiPaste').focus();
+}
+
+// Parse markdown table response from Gemini
+function parsePastedAI(){
+  const text = document.getElementById('aiPaste').value || '';
+  const status = document.getElementById('parseStatus');
+  if(!text.trim()){ status.textContent = 'Paste a response first.'; status.style.color = 'var(--neg)'; return; }
+  status.textContent = 'Parsing…'; status.style.color = 'var(--tx-3)';
+
+  // Normalise indicator names for matching
+  const norm = (s)=> s.toLowerCase().replace(/[^a-z0-9 ]/g,'').replace(/\s+/g,' ').trim();
+  const indMap = INDICATORS.map(i=>({id: i.id, key: norm(i.name), unit: i.unit, ind: i}));
+
+  // Pull lines that look like markdown table rows
+  const lines = text.split(/\r?\n/).filter(l=>{
+    const t = l.trim();
+    if(!t.startsWith('|')) return false;
+    if(/^\|\s*-+/.test(t)) return false; // separator
+    if(/indicator\s*\|\s*value/i.test(t)) return false; // header
+    return true;
+  });
+
+  const matched = [];
+  const unmatched = [];
+
+  lines.forEach(line=>{
+    // Split by |, trim each cell, drop empties
+    const cells = line.split('|').map(c=>c.trim()).filter(c=>c.length);
+    if(cells.length < 2) return;
+    const nameCell = cells[0], valueCell = cells[1];
+    if(!nameCell || !valueCell) return;
+    // Strip parens like "(% YoY)" from name
+    const nameClean = nameCell.replace(/\([^)]*\)/g,'').trim();
+    const nameKey = norm(nameClean);
+    if(!nameKey) return;
+
+    // Find best fuzzy match
+    let best = null, bestScore = 0;
+    indMap.forEach(im=>{
+      const a = nameKey, b = im.key;
+      // simple Dice coefficient on bigrams
+      const bigrams = (s)=> { const set = new Set(); for(let i=0;i<s.length-1;i++) set.add(s.slice(i,i+2)); return set; };
+      const A = bigrams(a), B = bigrams(b);
+      let inter = 0; A.forEach(x=>{ if(B.has(x)) inter++; });
+      const score = (2*inter) / (A.size + B.size || 1);
+      // bonus for exact substring
+      const sub = (a.includes(b) || b.includes(a)) ? 0.15 : 0;
+      const total = score + sub;
+      if(total > bestScore){ bestScore = total; best = im; }
+    });
+    if(!best || bestScore < 0.45){ unmatched.push(nameCell); return; }
+
+    // Parse value: strip ₹ $ % , and units; pick first signed number
+    const cleanedVal = valueCell.replace(/[₹$,]/g,'').replace(/[\u2212]/g,'-');
+    const m = cleanedVal.match(/-?\d+(?:\.\d+)?/);
+    if(!m){ unmatched.push(nameCell); return; }
+    let v = parseFloat(m[0]);
+    // Heuristic: if the value cell mentions "trillion" or "billion" or "crore" and unit is USD Bn / yr, adjust
+    if(/trillion/i.test(valueCell) && best.unit && best.unit.includes('Bn')) v *= 1000;
+    if(/lakh\s*cr/i.test(valueCell) && best.unit==='% YoY') {/* skip — wrong unit */}
+
+    state.values[best.id] = v;
+    matched.push(best.ind.name + ' = ' + v);
+  });
+
+  if(matched.length){
+    const msg = `Matched ${matched.length} of ${matched.length + unmatched.length} rows. Snapshot updated.`;
+    renderSnapshot();
+    // Re-open paste panel and re-set status
+    const host = document.getElementById('pasteHost');
+    if(host) host.style.display = 'block';
+    const s2 = document.getElementById('parseStatus');
+    if(s2){ s2.textContent = msg; s2.style.color = 'var(--pos)'; }
+    const ta = document.getElementById('aiPaste');
+    if(ta) ta.value = text;
+  } else {
+    status.textContent = `Could not parse any rows. Make sure the response is a markdown table (| Indicator | Value | …).`;
+    status.style.color = 'var(--neg)';
+  }
+}
+
+function generateStory(){
+  const gdp = state.values.gdp_growth, inf = state.values.inflation, repo = state.values.interest_rate;
+  const pmiM = state.values.pmi_mfg, pmiS = state.values.pmi_services;
+  const unemp = state.values.unemployment, fx = state.values.forex;
+  const tb = state.values.trade_balance, fdi = state.values.fdi, capex = state.values.govt_spending;
+  const parts = [];
+
+  // Growth + inflation framing
+  const growthOK = gdp >= 6.5, infHigh = inf >= 5.5, infOK = inf <= 4.5;
+  if(growthOK && infOK){
+    parts.push(`India is in a <strong>goldilocks moment</strong>: real GDP growing at <em>${gdp.toFixed(1)}%</em> with CPI inflation tame at <em>${inf.toFixed(1)}%</em>. The RBI repo rate at <em>${repo.toFixed(2)}%</em> leaves room to cut if growth needs support.`);
+  } else if(growthOK && infHigh){
+    parts.push(`Growth is strong (<em>${gdp.toFixed(1)}%</em> GDP) but inflation is <strong>uncomfortable</strong> at <em>${inf.toFixed(1)}%</em>. Expect the RBI's repo rate (currently <em>${repo.toFixed(2)}%</em>) to stay restrictive until prices cool.`);
+  } else if(!growthOK && infHigh){
+    parts.push(`Stagflation risk is rising: GDP growth at <em>${gdp.toFixed(1)}%</em> is below India's potential while inflation at <em>${inf.toFixed(1)}%</em> remains uncomfortable. This is the hardest macro environment to navigate.`);
+  } else {
+    parts.push(`The economy is in a <strong>cooling phase</strong>: GDP at <em>${gdp.toFixed(1)}%</em>, inflation at <em>${inf.toFixed(1)}%</em>. RBI has scope to support growth at the next policy meeting.`);
+  }
+
+  // Business activity
+  if(pmiM >= 55 && pmiS >= 55){
+    parts.push(`Both Manufacturing (PMI <em>${pmiM.toFixed(1)}</em>) and Services (<em>${pmiS.toFixed(1)}</em>) are expanding — broad-based momentum.`);
+  } else if(pmiS >= 55 && pmiM < 52){
+    parts.push(`Services (PMI <em>${pmiS.toFixed(1)}</em>) are doing the heavy lifting; manufacturing (<em>${pmiM.toFixed(1)}</em>) is sluggish.`);
+  }
+
+  // External
+  if(fx >= 650){
+    parts.push(`External buffer is strong with <em>$${fx.toFixed(0)}B</em> in forex reserves (~${(fx/60).toFixed(1)} months of imports).`);
+  }
+  if(tb <= -25){
+    parts.push(`Trade deficit is wide at <em>$${tb.toFixed(1)}B/month</em>, which could weigh on the rupee if exports don't pick up.`);
+  }
+
+  // FDI / capex
+  if(fdi >= 70 && capex >= 10){
+    parts.push(`Investment story holds: FDI at <em>$${fdi.toFixed(0)}B</em> and government capex growth at <em>${capex.toFixed(1)}%</em> are both supportive.`);
+  }
+
+  parts.push(`<span style="color:var(--tx-3)">Read each indicator below for the full deep-dive, or open the Compare tab to see how these numbers relate over time.</span>`);
+  return parts.join(' ');
+}
+
+function drawSparkline(canvasId, data, ind){
+  const c = document.getElementById(canvasId);
+  if(!c||!data||!data.length) return;
+  const vals = data.map(d=>d.value);
+  const last = vals[vals.length-1];
+  const first = vals[0];
+  const color = last>=first ? '#2E5B4B' : '#A73C3C';
+  state.charts[canvasId] = new Chart(c,{
+    type:'line',
+    data:{labels:data.map(d=>d.year),datasets:[{data:vals,borderColor:color,borderWidth:1.5,fill:false,pointRadius:0,tension:0.35}]},
+    options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{display:false},tooltip:{enabled:false}},scales:{x:{display:false},y:{display:false}},animation:{duration:600}}
+  });
+}
+
+function computeScore(){
+  let total=0,n=0;
+  INDICATORS.forEach(ind=>{
+    const v = state.values[ind.id];
+    if(v==null||isNaN(v)) return;
+    const range = Math.max(1,Math.abs(ind.wh-ind.wl));
+    const d = Math.abs(v-ind.target)/range;
+    const s = Math.max(0, Math.min(100, 100-d*220));
+    total+=s; n++;
+  });
+  return n? Math.round(total/n):0;
+}
+function computePhase(){
+  const gdp = state.values.gdp_growth, inf = state.values.inflation, pmi = state.values.pmi_mfg, unemp = state.values.unemployment;
+  const growthGood = gdp>=6.5, infOK = inf<=5.5, pmiExp = pmi>=52, jobsOK = unemp<=7;
+  let pos, name;
+  if(growthGood && infOK && pmiExp){ pos=78; name='Expansion'; }
+  else if(growthGood && !infOK){ pos=92; name='Late-cycle peak'; }
+  else if(!growthGood && !infOK){ pos=22; name='Stagflation risk'; }
+  else if(!growthGood && infOK && jobsOK){ pos=42; name='Soft landing'; }
+  else if(!growthGood && infOK && !jobsOK){ pos=10; name='Contraction'; }
+  else { pos=58; name='Mid-cycle'; }
+  return {pos,name};
+}
+
+// ─── COMPARE ──────────────────────────────────────
+const COMPARE_PRESETS = [
+  {name:'Monetary transmission', ids:['interest_rate','loan_growth','inflation'], desc:'The classic rate → credit → prices chain.'},
+  {name:'Phillips curve', ids:['unemployment','inflation'], desc:'The textbook unemployment-vs-inflation tradeoff.'},
+  {name:'Investment cycle', ids:['gfcf','gdp_growth','fdi'], desc:'How capital formation translates to growth.'},
+  {name:'External buffer', ids:['forex','trade_balance','exports'], desc:'India\'s dollar buffer in three numbers.'},
+  {name:'Cycle leaders', ids:['pmi_mfg','pmi_services','industrial_prod'], desc:'PMI surveys versus actual production.'},
+  {name:'Demand side', ids:['consumer_spending','consumer_conf','unemployment'], desc:'The mood and money of households.'},
+];
+state.compareView = state.compareView || 'line';
+function renderCompare(){
+  const chosen = state.compareIds.map(id=>IND_MAP[id]).filter(Boolean);
+  const palette = ['#1C1C1A','#D6A848','#2E5B4B','#A73C3C'];
+  const others = INDICATORS.filter(i=>!state.compareIds.includes(i.id));
+  const view = state.compareView;
+  document.getElementById('main').innerHTML = `
+<div class="page">
+  <div class="eyebrow">Compare across time</div>
+  <h1 class="disp" style="margin-bottom:18px">Two indicators<br/><em>tell a story.</em> Four tell a thesis.</h1>
+  <p class="lede" style="margin-bottom:24px">Pin up to four indicators. Switch between absolute values, z-score normalised view (so different units share a scale), or a scatter plot to spot non-linear relationships.</p>
+
+  <div class="preset-row" data-testid="preset-row">
+    <span class="pr-eyebrow">Smart pairs</span>
+    ${COMPARE_PRESETS.map((p,i)=>`<button class="preset-btn" onclick="loadPreset(${i})" title="${p.desc}" data-testid="preset-${i}">${p.name}</button>`).join('')}
+  </div>
+
+  <div class="cmp-bar" data-testid="compare-bar">
+    ${chosen.map((ind,i)=>`<span class="cmp-chip" data-testid="cmp-chip-${ind.id}"><span class="cmp-dot" style="background:${palette[i]}"></span>${ind.name}<span class="x" onclick="removeCompare('${ind.id}')" data-testid="cmp-remove-${ind.id}">×</span></span>`).join('')}
+    ${state.compareIds.length<4?`<span class="cmp-add">
+      <select onchange="addCompare(this.value);this.value=''" data-testid="cmp-add-select">
+        <option value="">+ Add indicator</option>
+        ${Object.entries(CATS).map(([cat,meta])=>{
+          const opts=others.filter(i=>i.cat===cat);
+          if(!opts.length) return '';
+          return `<optgroup label="${meta.label}">${opts.map(i=>`<option value="${i.id}">${i.name}</option>`).join('')}</optgroup>`;
+        }).join('')}
+      </select>
+    </span>`:''}
+    <span style="margin-left:auto;font-family:var(--mono);font-size:10px;color:var(--tx-3);text-transform:uppercase;letter-spacing:0.14em">${state.compareIds.length}/4 selected</span>
+  </div>
+
+  <div class="view-toggle" data-testid="view-toggle">
+    <button class="vt-btn ${view==='line'?'on':''}" onclick="setCmpView('line')" data-testid="vt-line">Time series</button>
+    <button class="vt-btn ${view==='norm'?'on':''}" onclick="setCmpView('norm')" data-testid="vt-norm">Normalised (z-score)</button>
+    <button class="vt-btn ${view==='scatter'?'on':''}" onclick="setCmpView('scatter')" data-testid="vt-scatter" ${chosen.length<2?'disabled':''}>Scatter (X vs Y)</button>
+  </div>
+  <p class="view-help">${
+    view==='line' ? 'Each indicator drawn on its own axis (left for #1, right for #2+). Best for tracking levels.' :
+    view==='norm' ? 'All series rescaled to mean 0, standard deviation 1. Lets you visually compare patterns even when units differ wildly.' :
+    chosen.length>=2 ? `Each point is one year, plotting ${chosen[0]?.name} (x) against ${chosen[1]?.name} (y). Tight clustering = strong relationship; outliers are interesting years.` : 'Add at least 2 indicators to enable scatter view.'
+  }</p>
+  <div class="chart-wrap"><canvas id="cmpChart"></canvas></div>
+
+  <h2 class="sec" style="margin:48px 0 8px">Pair-by-pair insights</h2>
+  <div class="cmp-insights-grid" data-testid="cmp-insights-grid">${buildInsightCards(chosen)}</div>
+
+  <h2 class="sec" style="margin:48px 0 8px">Reading guide</h2>
+  <p class="prose" style="margin-bottom:24px">${compareNarrative(chosen)}</p>
+</div>`;
+
+  setTimeout(()=>drawCompareChart(chosen, palette, view), 60);
+}
+function setCmpView(v){ state.compareView = v; renderCompare(); }
+function loadPreset(i){
+  const p = COMPARE_PRESETS[i]; if(!p) return;
+  state.compareIds = p.ids.slice(0,4);
+  renderCompare();
+}
+function addCompare(id){ if(id&&state.compareIds.length<4&&!state.compareIds.includes(id)){state.compareIds.push(id);renderCompare();}}
+function removeCompare(id){ state.compareIds=state.compareIds.filter(x=>x!==id); if(!state.compareIds.length)state.compareIds=['gdp_growth']; renderCompare(); }
+
+function zscoreSeries(series){
+  if(!series.length) return [];
+  const vals = series.map(d=>d.value);
+  const m = vals.reduce((s,x)=>s+x,0)/vals.length;
+  const sd = Math.sqrt(vals.reduce((s,x)=>s+(x-m)**2,0)/vals.length) || 1;
+  return series.map(d=>({year:d.year, value:(d.value - m)/sd}));
+}
+
+function drawCompareChart(chosen, palette, view){
+  const c = document.getElementById('cmpChart');
+  if(!c) return;
+  try{state.charts.cmp&&state.charts.cmp.destroy()}catch(e){}
+
+  if(view === 'scatter' && chosen.length >= 2){
+    const a = chosen[0], b = chosen[1];
+    const mA = new Map((state.history[a.id]||[]).map(d=>[d.year,d.value]));
+    const mB = new Map((state.history[b.id]||[]).map(d=>[d.year,d.value]));
+    const yrs = [...mA.keys()].filter(y=>mB.has(y)).sort((x,y)=>String(x).localeCompare(String(y)));
+    const points = yrs.map(y=>({x: mA.get(y), y: mB.get(y), year: y}));
+    state.charts.cmp = new Chart(c, {
+      type:'scatter',
+      data:{datasets:[{
+        label:`${a.name} vs ${b.name}`,
+        data: points,
+        backgroundColor: palette[0]+'AA',
+        borderColor: palette[0],
+        pointRadius:5, pointHoverRadius:9,
+      }]},
+      options:{
+        responsive:true,maintainAspectRatio:false,
+        plugins:{
+          legend:{display:false},
+          tooltip:{backgroundColor:'#FFFFFF',titleColor:'#5C5C58',bodyColor:'#1C1C1A',borderColor:'#1C1C1A',borderWidth:1,cornerRadius:0,padding:12,
+            callbacks:{ title:(its)=> points[its[0].dataIndex].year, label:(ctx)=>[`${a.name}: ${ctx.parsed.x.toFixed(2)} ${a.unit}`, `${b.name}: ${ctx.parsed.y.toFixed(2)} ${b.unit}`] }
+          }
+        },
+        scales:{
+          x:{title:{display:true,text:`${a.name} (${a.unit})`,font:{family:'JetBrains Mono',size:10},color:'#5C5C58'},grid:{color:'#E2DFD8',drawTicks:false},ticks:{color:'#8A8A86',font:{family:'JetBrains Mono',size:10}}},
+          y:{title:{display:true,text:`${b.name} (${b.unit})`,font:{family:'JetBrains Mono',size:10},color:'#5C5C58'},grid:{color:'#E2DFD8'},ticks:{color:'#5C5C58',font:{family:'JetBrains Mono',size:10}}}
+        }
+      }
+    });
+    return;
+  }
+
+  // Time-series (line or normalised)
+  const allYears = new Set();
+  chosen.forEach(ind=>{(state.history[ind.id]||[]).forEach(d=>allYears.add(d.year))});
+  const years = Array.from(allYears).sort((a,b)=>String(a).localeCompare(String(b)));
+  const datasets = chosen.map((ind,i)=>{
+    const series = view==='norm' ? zscoreSeries(state.history[ind.id]||[]) : (state.history[ind.id]||[]);
+    const map = new Map(series.map(d=>[d.year,d.value]));
+    return {
+      label: `${ind.name}${view==='norm'?'':' ('+ind.unit+')'}`,
+      data: years.map(y=>map.has(y)?map.get(y):null),
+      borderColor: palette[i],
+      backgroundColor: palette[i]+'10',
+      borderWidth: 2,
+      yAxisID: view==='norm' ? 'y' : (i<2?'y':'y1'),
+      tension: 0.32, pointRadius: 0, pointHoverRadius: 5, spanGaps: true,
+    };
+  });
+  state.charts.cmp = new Chart(c,{
+    type:'line',
+    data:{labels:years,datasets},
+    options:{
+      responsive:true,maintainAspectRatio:false,
+      interaction:{mode:'index',intersect:false},
+      plugins:{
+        legend:{display: view==='norm', position:'top', labels:{font:{family:'JetBrains Mono',size:11},color:'#1C1C1A',usePointStyle:true,pointStyle:'line'}},
+        tooltip:{backgroundColor:'#FFFFFF',titleColor:'#5C5C58',bodyColor:'#1C1C1A',borderColor:'#1C1C1A',borderWidth:1,cornerRadius:0,padding:12,titleFont:{family:'JetBrains Mono',size:11},bodyFont:{family:'JetBrains Mono',size:12}}
+      },
+      scales: view==='norm' ? {
+        x:{grid:{color:'#E2DFD8',drawTicks:false},ticks:{color:'#8A8A86',font:{family:'JetBrains Mono',size:10}}},
+        y:{grid:{color:'#E2DFD8'},ticks:{color:'#5C5C58',font:{family:'JetBrains Mono',size:10}},title:{display:true,text:'Standard deviations from mean',font:{family:'JetBrains Mono',size:10},color:'#5C5C58'}},
+      } : {
+        x:{grid:{color:'#E2DFD8',drawTicks:false},ticks:{color:'#8A8A86',font:{family:'JetBrains Mono',size:10}}},
+        y:{position:'left',grid:{color:'#E2DFD8'},ticks:{color:'#5C5C58',font:{family:'JetBrains Mono',size:10}},title:{display:datasets[0]?true:false,text:datasets[0]?.label||'',font:{family:'JetBrains Mono',size:10},color:datasets[0]?.borderColor}},
+        y1:{position:'right',grid:{display:false},ticks:{color:'#5C5C58',font:{family:'JetBrains Mono',size:10}},title:{display:datasets[1]?true:false,text:datasets[1]?.label||'',font:{family:'JetBrains Mono',size:10},color:datasets[1]?.borderColor},display:chosen.length>=2}
+      }
+    }
+  });
+}
+
+function corrAndLag(seriesA, seriesB, maxLag){
+  // Compute Pearson at various lags, return best
+  const mA = new Map(seriesA.map(d=>[d.year,d.value])), mB = new Map(seriesB.map(d=>[d.year,d.value]));
+  const yrs = [...mA.keys()].filter(y=>mB.has(y)).sort();
+  if(yrs.length < 4) return null;
+  function corrAt(lag){
+    const pairs = [];
+    yrs.forEach(y=>{
+      // For annual data 'y' might be string like "2020" or "2025-06" — try numeric offset
+      let next;
+      if(/^\d{4}$/.test(String(y))){
+        next = String(parseInt(y)+lag);
+      } else if(/^\d{4}-\d{2}$/.test(String(y))){
+        const [yy,mm] = String(y).split('-').map(Number);
+        const tot = yy*12 + mm + lag;
+        next = `${Math.floor(tot/12)}-${String(((tot-1)%12)+1).padStart(2,'0')}`;
+      } else next = y;
+      if(mB.has(next)) pairs.push({a:mA.get(y), b:mB.get(next)});
+    });
+    if(pairs.length < 4) return null;
+    const aMean = pairs.reduce((s,p)=>s+p.a,0)/pairs.length;
+    const bMean = pairs.reduce((s,p)=>s+p.b,0)/pairs.length;
+    let n=0,da=0,db=0;
+    pairs.forEach(p=>{ n+=(p.a-aMean)*(p.b-bMean); da+=(p.a-aMean)**2; db+=(p.b-bMean)**2; });
+    return da&&db ? {corr: n/Math.sqrt(da*db), n: pairs.length} : null;
+  }
+  let best = {lag: 0, ...corrAt(0)};
+  for(let l = -maxLag; l <= maxLag; l++){
+    if(l===0) continue;
+    const r = corrAt(l);
+    if(r && Math.abs(r.corr) > Math.abs(best.corr || 0)) best = {lag: l, ...r};
+  }
+  return best;
+}
+
+function recentSlope(series, n){
+  const tail = series.slice(-n);
+  if(tail.length < 3) return null;
+  const ys = tail.map((d,i)=>d.value);
+  const xs = tail.map((_,i)=>i);
+  const xm = xs.reduce((s,x)=>s+x,0)/xs.length;
+  const ym = ys.reduce((s,y)=>s+y,0)/ys.length;
+  let num=0, den=0;
+  for(let i=0;i<xs.length;i++){ num+=(xs[i]-xm)*(ys[i]-ym); den+=(xs[i]-xm)**2; }
+  return den? num/den : 0;
+}
+
+function stdDev(series){
+  if(!series.length) return 0;
+  const m = series.reduce((s,d)=>s+d.value,0)/series.length;
+  return Math.sqrt(series.reduce((s,d)=>s+(d.value-m)**2,0)/series.length);
+}
+
+function buildInsightCards(chosen){
+  if(chosen.length < 2) return '<div class="prose" style="font-style:italic;color:var(--tx-3);padding:14px">Add a second indicator to see relationship insights.</div>';
+  const cards = [];
+  for(let i=0;i<chosen.length-1;i++){
+    for(let j=i+1;j<chosen.length;j++){
+      const a = chosen[i], b = chosen[j];
+      const seriesA = state.history[a.id]||[], seriesB = state.history[b.id]||[];
+      const cl = corrAndLag(seriesA, seriesB, 3);
+      if(!cl) continue;
+      const strength = Math.abs(cl.corr)>0.7?'strongly':Math.abs(cl.corr)>0.4?'meaningfully':Math.abs(cl.corr)>0.2?'weakly':'barely';
+      const direction = cl.corr > 0 ? 'together' : 'in opposite directions';
+      const lagText = cl.lag === 0 ? 'simultaneously'
+        : cl.lag > 0 ? `with <strong>${a.name}</strong> leading by ${cl.lag} period${cl.lag>1?'s':''}`
+        : `with <strong>${b.name}</strong> leading by ${-cl.lag} period${-cl.lag>1?'s':''}`;
+      const volA = stdDev(seriesA).toFixed(2);
+      const volB = stdDev(seriesB).toFixed(2);
+      const slopeA = recentSlope(seriesA, 5);
+      const slopeB = recentSlope(seriesB, 5);
+      const slopeAW = slopeA == null ? '—' : (slopeA>0?'↑':'↓') + ' ' + Math.abs(slopeA).toFixed(2);
+      const slopeBW = slopeB == null ? '—' : (slopeB>0?'↑':'↓') + ' ' + Math.abs(slopeB).toFixed(2);
+      const conv = slopeA != null && slopeB != null && Math.sign(slopeA) === Math.sign(slopeB);
+      cards.push(`
+        <div class="insight-card" data-testid="insight-${a.id}-${b.id}">
+          <div class="ic-head">
+            <div class="ic-pair"><strong>${a.name}</strong> &times; <strong>${b.name}</strong></div>
+            <div class="ic-corr ${cl.corr>0?'pos':'neg'}">r = ${cl.corr.toFixed(2)}</div>
+          </div>
+          <p class="ic-narr">These two indicators ${strength} move ${direction} over <strong>${cl.n} overlapping observations</strong>, ${lagText}.</p>
+          <div class="ic-stats">
+            <div><div class="k">Recent 5-period trend</div><div class="v"><span>${a.name}: <strong>${slopeAW}</strong></span><span>${b.name}: <strong>${slopeBW}</strong></span></div></div>
+            <div><div class="k">Volatility (σ)</div><div class="v"><span>${a.name}: <strong>${volA}</strong></span><span>${b.name}: <strong>${volB}</strong></span></div></div>
+          </div>
+          <p class="ic-read">${interpretPair(a, b, cl, conv)}</p>
+        </div>`);
+    }
+  }
+  return cards.join('') || '<div class="prose" style="color:var(--tx-3);padding:14px;font-style:italic">Not enough overlapping data points to compute relationships.</div>';
+}
+
+function interpretPair(a, b, cl, conv){
+  const known = {
+    'interest_rate|inflation': 'Classic monetary transmission: RBI hikes when inflation runs hot; cuts when it cools. A near-zero correlation here is interesting because it suggests the rate cycle isn\'t purely inflation-driven.',
+    'inflation|interest_rate': 'Classic monetary transmission: RBI hikes when inflation runs hot; cuts when it cools.',
+    'gdp_growth|unemployment': 'Okun\'s law in India: 1pp of GDP growth above potential typically lowers unemployment by ~0.2pp. The relationship is weaker than in OECD economies because of India\'s informal sector.',
+    'unemployment|gdp_growth': 'Okun\'s law: faster growth typically reduces unemployment, though India\'s informal labour market dampens the link.',
+    'pmi_mfg|industrial_prod': 'PMI is the leading edge of IIP. A 3-month moving average of PMI tends to anticipate IIP turns by 4–6 weeks.',
+    'gfcf|gdp_growth': 'Capital formation is what compounds into future growth. Sustained 32%+ GFCF is what locks in 7% real GDP.',
+    'fdi|forex': 'FDI inflows directly boost reserves, but the link weakens when capital outflows from FPIs dominate the FX balance.',
+    'trade_balance|forex': 'A wider goods deficit drains dollars unless offset by services exports and FDI. Forex reserves should fall in years when the trade deficit blows out.',
+    'exports|forex': 'Stronger goods exports bring dollars in, supporting reserves and the rupee.',
+    'consumer_conf|consumer_spending': 'Confidence leads spending by roughly one quarter — households decide before they swipe.',
+  };
+  const key1 = a.id+'|'+b.id, key2 = b.id+'|'+a.id;
+  if(known[key1]) return `<strong>What to read:</strong> ${known[key1]}`;
+  if(known[key2]) return `<strong>What to read:</strong> ${known[key2]}`;
+  // Generic
+  const dir = cl.corr > 0 ? 'reinforce each other' : 'pull in opposite directions';
+  const convPart = conv ? 'and their recent 5-period trends are converging in the same direction — a continuation signal' : 'but their recent trends are diverging, hinting at a regime change';
+  return `<strong>What to read:</strong> Across recent history these two ${dir} ${convPart}. Use Simulate to test which one moves first if you change the other.`;
+}
+
+function compareNarrative(chosen){
+  if(chosen.length < 2) return 'Pick at least two indicators to see how they relate.';
+  return `Pair-by-pair insights above analyse each combination across overlapping history. <strong>Time-series view</strong> shows raw levels (best for tracking absolute values), <strong>normalised view</strong> rescales each series so different units sit on the same y-axis (best for pattern matching), and <strong>scatter view</strong> plots one indicator against another to surface non-linear relationships. The correlation coefficient (r) ranges from -1 to +1; magnitudes above 0.7 are strong, 0.4–0.7 meaningful, below 0.2 essentially noise. Always remember: correlation is a clue, not a verdict — Indian macro is full of structural breaks that flip historical patterns.`;
+}
+
+// ─── SIMULATE ──────────────────────────────────────
+const STR_MULT = {high: 1.0, mid: 0.6, low: 0.3};
+const STR_NUM  = {high: 3, mid: 2, low: 1};
+const TIMING   = {lead: '1–2 quarters', coin: '2–4 quarters', lag: '4–8 quarters'};
+const MAG_LABEL = (m)=> m>=0.6?'Strong': m>=0.25?'Moderate': m>=0.08?'Mild':'Faint';
+
+function indicatorScale(ind){
+  return Math.max(0.4, Math.abs(ind.wh - ind.wl) / 4);
+}
+
+function computeRipple(){
+  const inputs = Object.entries(state.forecast)
+    .filter(([,d])=>d && d!=='flat')
+    .map(([id, dir])=>({id, dir, ind: IND_MAP[id]}))
+    .filter(x=>x.ind);
+  if(!inputs.length) return null;
+
+  const inputIds = new Set(inputs.map(i=>i.id));
+  const effects = new Map(); // targetId -> {target, amount, contributions[]}
+
+  function add(targetId, target, amount, contrib){
+    if(!effects.has(targetId)) effects.set(targetId, {target, amount: 0, contributions: []});
+    const e = effects.get(targetId); e.amount += amount; e.contributions.push(contrib);
+  }
+
+  // 1st-order
+  const firstOrderEdges = [];
+  inputs.forEach(inp=>{
+    const dirSign = inp.dir === 'up' ? 1 : -1;
+    (inp.ind.impacts || []).forEach(imp=>{
+      const tgt = IND_MAP[imp.to]; if(!tgt) return;
+      const strMult = STR_MULT[imp.str] || 0.5;
+      const sign = dirSign * (imp.dir === 'pos' ? 1 : -1);
+      const amount = sign * strMult * indicatorScale(tgt);
+      add(imp.to, tgt, amount, {hop:1, from: inp.ind, str: imp.str, sign, amount, note: imp.note});
+      firstOrderEdges.push({src: inp.ind, dst: tgt, str: imp.str, sign, amount});
+    });
+  });
+
+  // 2nd-order — only target indicators NOT already in inputs (avoid circular)
+  const secondOrderEdges = [];
+  const firstSnap = Array.from(effects.values()).map(e=>({...e}));
+  firstSnap.forEach(eff=>{
+    const sign1 = eff.amount >= 0 ? 1 : -1;
+    const mag1 = Math.min(1, Math.abs(eff.amount) / indicatorScale(eff.target));
+    (eff.target.impacts || []).forEach(imp=>{
+      const tgt = IND_MAP[imp.to]; if(!tgt) return;
+      if(inputIds.has(tgt.id)) return;
+      const strMult = STR_MULT[imp.str] || 0.5;
+      const sign = sign1 * (imp.dir === 'pos' ? 1 : -1);
+      const amount = sign * strMult * mag1 * indicatorScale(tgt) * 0.6;
+      if(Math.abs(amount) < 0.08) return;
+      add(imp.to, tgt, amount, {hop:2, from: eff.target, via: eff.target, str: imp.str, sign, amount});
+      secondOrderEdges.push({src: eff.target, dst: tgt, str: imp.str, sign, amount});
+    });
+  });
+
+  const list = Array.from(effects.values()).sort((a,b)=>Math.abs(b.amount)-Math.abs(a.amount));
+
+  // Category aggregation
+  const catAgg = {};
+  Object.keys(CATS).forEach(c=> catAgg[c] = {sum:0, count:0});
+  list.forEach(e=>{
+    const norm = e.amount / indicatorScale(e.target);
+    catAgg[e.target.cat].sum += norm; catAgg[e.target.cat].count++;
+  });
+
+  return {inputs, effects:list, firstOrderEdges, secondOrderEdges, catAgg};
+}
+
+function renderSimulate(){
+  document.getElementById('main').innerHTML = `
+<div class="page">
+  <div class="eyebrow">Trace the consequences</div>
+  <h1 class="disp" style="margin-bottom:18px">If <em>this</em> moves,<br/>what moves next?</h1>
+  <p class="lede" style="margin-bottom:36px">Pick any indicator, choose a direction, and watch the downstream impacts ripple through the economy. The simulator encodes each link's strength from the macro literature and projects new values, magnitudes and category impact.</p>
+
+  <div class="sim-grid">
+    <div class="sim-controls">
+      <div class="sim-card sim-section" data-testid="sim-controls">
+        <div class="sim-controls-head">
+          <div class="ct">Set direction</div>
+          <button onclick="clearFc()" data-testid="simulator-clear-btn">Clear all</button>
+        </div>
+        ${INDICATORS.map(ind=>`
+          <div class="dir-row" id="fc-${ind.id}">
+            <div class="nm">${ind.name}</div>
+            <div class="dir-btns" data-testid="dir-${ind.id}">
+              <button class="dir-btn up ${state.forecast[ind.id]==='up'?'on':''}" onclick="setFc('${ind.id}','up')">↑</button>
+              <button class="dir-btn fl ${state.forecast[ind.id]==='flat'?'on':''}" onclick="setFc('${ind.id}','flat')">—</button>
+              <button class="dir-btn dn ${state.forecast[ind.id]==='down'?'on':''}" onclick="setFc('${ind.id}','down')">↓</button>
+            </div>
+          </div>
+        `).join('')}
+      </div>
+    </div>
+    <div>
+      <div id="sim-results"></div>
+    </div>
+  </div>
+</div>`;
+  renderSimResults();
+}
+
+function setFc(id, dir){
+  if(state.forecast[id] === dir) delete state.forecast[id];
+  else state.forecast[id] = dir;
+  document.querySelectorAll(`[data-testid="dir-${id}"] .dir-btn`).forEach(b=>b.classList.remove('on'));
+  if(state.forecast[id]){
+    const cls = state.forecast[id]==='up'?'up':state.forecast[id]==='down'?'dn':'fl';
+    document.querySelector(`[data-testid="dir-${id}"] .dir-btn.${cls}`).classList.add('on');
+  }
+  renderSimResults();
+}
+function clearFc(){ state.forecast = {}; renderSimulate(); }
+
+function renderSimResults(){
+  const out = document.getElementById('sim-results');
+  if(!out) return;
+  try{state.charts.bars&&state.charts.bars.destroy()}catch(e){}
+
+  const ripple = computeRipple();
+  if(!ripple){
+    out.innerHTML = `
+      <div class="sim-prompt" data-testid="sim-empty">
+        <div class="num">Step 1 of 1</div>
+        <div class="em">Pick at least one indicator to move</div>
+        <p class="hint">Choose ↑ or ↓ on any indicator at the left to start a simulation. The downstream ripple will appear here — sankey flow, projected magnitudes, category-level impact and per-indicator outlook with timing.</p>
+      </div>`;
+    return;
+  }
+
+  const top3 = ripple.effects.slice(0, 3);
+  const totalEff = ripple.effects.length;
+  const inputSummary = ripple.inputs.map(i=>`${i.ind.name} ${i.dir==='up'?'↑':'↓'}`).join(' · ');
+
+  out.innerHTML = `
+    <div style="font-family:var(--mono);font-size:10.5px;color:var(--tx-3);text-transform:uppercase;letter-spacing:0.16em;margin-bottom:12px">
+      Scenario · ${inputSummary} · ${totalEff} indicators affected
+    </div>
+
+    <div class="sim-hero" data-testid="sim-hero">
+      ${top3.map((e,i)=>{
+        const sign = e.amount >= 0 ? 'pos' : 'neg';
+        const arrow = e.amount >= 0 ? '↑' : '↓';
+        const cur = state.values[e.target.id]||0;
+        const proj = cur + e.amount;
+        const rankLabels = ['Largest impact','2nd largest','3rd largest'];
+        return `
+          <div class="cell ${sign}" onclick="openDeepDive('${e.target.id}','simulate')">
+            <div class="lbl">${rankLabels[i]}</div>
+            <div class="nm">${e.target.name}</div>
+            <div class="delta ${sign}">${arrow} ${Math.abs(e.amount).toFixed(2)} ${e.target.unit}</div>
+            <div class="proj">${cur.toFixed(2)} → ${proj.toFixed(2)} ${e.target.unit}</div>
+          </div>`;
+      }).join('')}
+    </div>
+
+    <div class="project-row" data-testid="project-row">
+      <div class="pr-label">Project any indicator</div>
+      <select id="projectSelect" onchange="projectIndicator(this.value)" data-testid="project-select">
+        <option value="">Pick an indicator to inspect…</option>
+        ${Object.entries(CATS).map(([cat,meta])=>{
+          const opts = INDICATORS.filter(i=>i.cat===cat);
+          return `<optgroup label="${meta.label}">${opts.map(i=>`<option value="${i.id}">${i.name}</option>`).join('')}</optgroup>`;
+        }).join('')}
+      </select>
+      <div id="pr-result-host" style="flex:1 1 100%"></div>
+    </div>
+
+    <div class="cascade-head">
+      <div class="ttl">Impact cascade · per input</div>
+      <div class="meta">Direct (solid border) + 2nd-order (dashed)</div>
+    </div>
+    <div class="cascade-grid" data-testid="cascade-grid">
+      ${renderCascades(buildCascades(ripple))}
+    </div>
+
+    <div class="cat-strip" data-testid="cat-strip">
+      ${Object.entries(CATS).map(([c, meta])=>{
+        const agg = ripple.catAgg[c];
+        const cls = agg.sum > 0.15 ? 'up' : agg.sum < -0.15 ? 'dn' : 'fl';
+        const arrow = cls==='up' ? '↑' : cls==='dn' ? '↓' : '·';
+        const mag = MAG_LABEL(Math.abs(agg.sum));
+        return `<div class="cat-cell ${cls}" title="${meta.label}: ${agg.count} affected"><div class="lbl">${meta.short}</div><div class="arr">${arrow}</div><div class="mag">${mag}</div></div>`;
+      }).join('')}
+    </div>
+
+    <div class="bars-wrap" data-testid="bars-wrap">
+      <div class="bars-head">
+        <h4>Projected magnitudes</h4>
+        <div class="legend"><span><i style="background:var(--pos)"></i>Positive</span><span><i style="background:var(--neg)"></i>Negative</span></div>
+      </div>
+      <div class="bars-canvas" style="height:${Math.max(220, 28*ripple.effects.length + 60)}px"><canvas id="impactBars"></canvas></div>
+    </div>
+
+    <div class="eyebrow" style="margin:32px 0 12px">Per-indicator outlook</div>
+    <div class="affected-grid" data-testid="affected-grid">
+      ${ripple.effects.map(e=>{
+        const sign = e.amount >= 0 ? 'pos' : 'neg';
+        const arrow = e.amount >= 0 ? '↑' : '↓';
+        const cur = state.values[e.target.id]||0;
+        const proj = cur + e.amount;
+        const mag = Math.abs(e.amount) / indicatorScale(e.target);
+        const strLabel = mag>=0.6?'high': mag>=0.3?'mid':'low';
+        const lo = Math.min(e.target.wl, e.target.wh), hi = Math.max(e.target.wl, e.target.wh);
+        const range = Math.max(0.0001, hi - lo);
+        const pctOf = (v)=> Math.max(2, Math.min(98, ((v - lo) / range) * 100));
+        const curPct = pctOf(cur), projPct = pctOf(proj), tgtPct = pctOf(e.target.target);
+        const left = Math.min(curPct, projPct), width = Math.abs(projPct - curPct);
+        const chainText = e.contributions.slice(0,2).map(c=>{
+          if(c.hop===1) return `<strong>${c.from.name}</strong> (1st-order · ${c.str})`;
+          return `<strong>${c.from.name}</strong> via ${c.via.name} (2nd-order · ${c.str})`;
+        }).join(' · ');
+        return `
+          <div class="aff-card" data-testid="aff-card-${e.target.id}">
+            <div class="aff-top" onclick="openDeepDive('${e.target.id}','simulate')">
+              <div class="aff-name">${e.target.name}</div>
+              <div class="aff-timing">${TIMING[e.target.type]}</div>
+            </div>
+            <div class="aff-vals" onclick="openDeepDive('${e.target.id}','simulate')">
+              <span class="aff-cur">${cur.toFixed(2)}</span>
+              <span class="aff-proj">${proj.toFixed(2)}<span class="u">${e.target.unit}</span></span>
+            </div>
+            <div class="aff-delta">
+              <span class="d ${sign}">${arrow} ${Math.abs(e.amount).toFixed(2)} ${e.target.unit}</span>
+              <span style="color:var(--tx-4)">·</span>
+              <span style="color:var(--tx-3)">${MAG_LABEL(mag)} impact</span>
+              <span class="aff-strength">${strLabel}</span>
+            </div>
+            <div class="aff-mini">
+              <div class="axis"></div>
+              <div class="tick" style="left:0"></div>
+              <div class="tick" style="left:50%"></div>
+              <div class="tick" style="left:100%"></div>
+              <div class="target" style="left:calc(${tgtPct}% - 3.5px)" title="Target ${e.target.target}"></div>
+              <div class="arrow-line ${sign}" style="left:${left}%; width:${width}%"></div>
+              <div class="from" style="left:calc(${curPct}% - 4.5px)" title="Current ${cur.toFixed(2)}"></div>
+              <div class="to" style="left:calc(${projPct}% - 5.5px)" title="Projected ${proj.toFixed(2)}"></div>
+            </div>
+            <div class="aff-chains">${chainText || '<em>direct effect</em>'}</div>
+            <button class="aff-explain-btn" onclick="toggleExplain('${e.target.id}', event)" data-testid="aff-explain-${e.target.id}">Why does this move</button>
+            <div class="aff-explain" id="explain-${e.target.id}">${explainEffect(e, ripple)}</div>
+          </div>`;
+      }).join('')}
+    </div>
+
+    <div class="sim-cta">
+      <button class="btn btn-ai" onclick="askForecastAI()" data-testid="forecast-ai-btn">⌘ Discuss this scenario with AI →</button>
+      <button class="btn btn-secondary" onclick="clearFc()">Reset scenario</button>
+    </div>
+  `;
+
+  setTimeout(()=>{ drawImpactBars(ripple); }, 40);
+}
+
+// ─── CASCADE TREE BUILDER ───────────────────────
+function buildCascades(ripple){
+  // For each input, build a clean tree: input → 1st-order children → 2nd-order grandchildren
+  const inputIds = new Set(ripple.inputs.map(i=>i.id));
+  return ripple.inputs.map(inp=>{
+    const dirSign = inp.dir === 'up' ? 1 : -1;
+    const firstOrder = (inp.ind.impacts || []).map(imp=>{
+      const tgt = IND_MAP[imp.to]; if(!tgt) return null;
+      const strMult = STR_MULT[imp.str] || 0.5;
+      const sign = dirSign * (imp.dir === 'pos' ? 1 : -1);
+      const amount = sign * strMult * indicatorScale(tgt);
+      const mag1 = Math.min(1, Math.abs(amount) / indicatorScale(tgt));
+      const secondOrder = (tgt.impacts || []).map(imp2=>{
+        const t2 = IND_MAP[imp2.to]; if(!t2) return null;
+        if(inputIds.has(t2.id)) return null;
+        const strMult2 = STR_MULT[imp2.str] || 0.5;
+        const sign2 = sign * (imp2.dir === 'pos' ? 1 : -1);
+        const amount2 = sign2 * strMult2 * mag1 * indicatorScale(t2) * 0.6;
+        if(Math.abs(amount2) < 0.05) return null;
+        return {tgt: t2, str: imp2.str, sign: sign2, amount: amount2};
+      }).filter(Boolean).sort((a,b)=>Math.abs(b.amount)-Math.abs(a.amount));
+      return {tgt, str: imp.str, sign, amount, note: imp.note, secondOrder};
+    }).filter(Boolean).sort((a,b)=>Math.abs(b.amount)-Math.abs(a.amount));
+    return {input: inp, firstOrder};
+  });
+}
+
+function renderCascades(cascades){
+  return cascades.map(c=>{
+    const cls = c.input.dir === 'up' ? 'up' : 'dn';
+    const arrow = c.input.dir === 'up' ? '↑' : '↓';
+    if(!c.firstOrder.length){
+      return `<div class="cascade">
+        <div class="cascade-input ${cls}"><span class="ci-arrow">${arrow}</span><span>${c.input.ind.name}</span><span class="ci-cat">${CATS[c.input.ind.cat].short}</span></div>
+        <div class="cascade-empty">No direct downstream links defined for this indicator yet.</div>
+      </div>`;
+    }
+    return `<div class="cascade">
+      <div class="cascade-input ${cls}">
+        <span class="ci-arrow">${arrow}</span>
+        <span>${c.input.ind.name}</span>
+        <span class="ci-cat">${CATS[c.input.ind.cat].short}</span>
+      </div>
+      <div class="cascade-body">
+        ${c.firstOrder.map(fo=>{
+          const c1cls = fo.sign >= 0 ? 'pos' : 'neg';
+          const c1arr = fo.sign >= 0 ? '↑' : '↓';
+          return `<div class="cascade-branch">
+            <div class="cascade-1 ${c1cls}" onclick="openDeepDive('${fo.tgt.id}','simulate')">
+              <span class="cn-arrow">${c1arr}</span>
+              <span class="cn-name">${fo.tgt.name}</span>
+              <span class="cn-tag">${fo.str} · ${fo.sign>=0?'+':''}${fo.amount.toFixed(2)} ${fo.tgt.unit}</span>
+            </div>
+            ${fo.secondOrder.length ? `
+              <div class="cascade-children">
+                ${fo.secondOrder.map(so=>{
+                  const c2cls = so.sign >= 0 ? 'pos' : 'neg';
+                  const c2arr = so.sign >= 0 ? '↑' : '↓';
+                  return `<div class="cascade-2 ${c2cls}" onclick="openDeepDive('${so.tgt.id}','simulate')">
+                    <span class="cn-arrow">${c2arr}</span>
+                    <span class="cn-name">${so.tgt.name}</span>
+                    <span class="cn-tag">${so.str} · ${so.sign>=0?'+':''}${so.amount.toFixed(2)} ${so.tgt.unit}</span>
+                  </div>`;
+                }).join('')}
+              </div>` : ''}
+          </div>`;
+        }).join('')}
+      </div>
+    </div>`;
+  }).join('');
+}
+
+// ─── PROJECT ANY INDICATOR ─────────────────────────
+function projectIndicator(id){
+  const host = document.getElementById('pr-result-host');
+  if(!id){ host.innerHTML = ''; return; }
+  const ind = IND_MAP[id]; if(!ind){ host.innerHTML = ''; return; }
+  const ripple = computeRipple();
+  const eff = ripple ? ripple.effects.find(e=>e.target.id === id) : null;
+  const cur = state.values[id]||0;
+
+  if(eff){
+    const sign = eff.amount >= 0 ? 'pos' : 'neg';
+    const arrow = eff.amount >= 0 ? '↑' : '↓';
+    const proj = cur + eff.amount;
+    const inputs = ripple.inputs.find(i=>i.id===id);
+    if(inputs){
+      // It's an input itself
+      host.innerHTML = `<div class="pr-result"><div class="nm">${ind.name} <span style="font-family:var(--mono);font-size:11px;color:var(--tx-3);text-transform:uppercase;letter-spacing:0.14em">You moved this</span></div><div class="narr">This indicator is one of your scenario inputs — you set it to move <em>${inputs.dir}</em>. Downstream effects from it appear in the cascade tree below.</div></div>`;
+      return;
+    }
+    host.innerHTML = `
+      <div class="pr-result" data-testid="pr-result-${id}">
+        <div class="nm">${ind.name}<span class="aff-timing" style="font-size:9px">${TIMING[ind.type]}</span></div>
+        <div class="vals">Current <strong>${cur.toFixed(2)} ${ind.unit}</strong> → Projected <span class="big">${proj.toFixed(2)} ${ind.unit}</span> <span class="arrow ${sign}">${arrow} ${Math.abs(eff.amount).toFixed(2)} ${ind.unit}</span></div>
+        <div class="narr">${explainEffect(eff, ripple)}</div>
+        <div class="actions">
+          <button onclick="openDeepDive('${id}','simulate')">View deep-dive</button>
+          <button onclick="closest_card_scroll('${id}')">Scroll to outlook card</button>
+        </div>
+      </div>`;
+  } else {
+    // Not affected — find which inputs would affect it
+    const possibleSources = INDICATORS.filter(src=> (src.impacts||[]).some(i=>i.to===id));
+    const indirectSources = new Set();
+    INDICATORS.forEach(src=>{
+      (src.impacts||[]).forEach(imp=>{
+        const mid = IND_MAP[imp.to];
+        if(mid && (mid.impacts||[]).some(i2=>i2.to===id) && src.id !== id){
+          indirectSources.add(src.id+'|via|'+mid.id);
+        }
+      });
+    });
+    const srcList = possibleSources.slice(0,6);
+    const indirectList = Array.from(indirectSources).slice(0,4).map(s=>{
+      const [a,_,b] = s.split('|');
+      return {direct: IND_MAP[a], via: IND_MAP[b]};
+    });
+    host.innerHTML = `
+      <div class="pr-result miss" data-testid="pr-result-${id}">
+        <div class="nm">${ind.name}<span class="aff-timing" style="font-size:9px">unchanged</span></div>
+        <div class="vals">Current <strong>${cur.toFixed(2)} ${ind.unit}</strong> — <em style="font-style:italic;color:var(--tx-3)">not affected by your current scenario</em></div>
+        <div class="narr">${ind.what}<br><br><strong>To project ${ind.name}, set a direction on one of these direct drivers:</strong></div>
+        <div class="actions">
+          ${srcList.map(s=>`<button onclick="setFc('${s.id}','up');projectIndicator('${id}')">+ ${s.name} ↑</button>`).join('')}
+        </div>
+        ${indirectList.length?`<div class="narr" style="margin-top:10px"><strong>Indirect drivers (2-step):</strong> ${indirectList.map(i=>`${i.direct.name} → ${i.via.name}`).join(' · ')}</div>`:''}
+      </div>`;
+  }
+}
+function closest_card_scroll(id){
+  const el = document.querySelector(`[data-testid="aff-card-${id}"]`);
+  if(el){ el.scrollIntoView({behavior:'smooth',block:'center'}); el.style.outline='2px solid var(--gold)'; setTimeout(()=>el.style.outline='',1500); }
+}
+
+// ─── EXPLAIN-WHY (per-indicator narrative) ─────
+function explainEffect(eff, ripple){
+  const ind = eff.target;
+  const directionWord = eff.amount >= 0 ? 'rises' : 'falls';
+  const magNorm = Math.abs(eff.amount) / indicatorScale(ind);
+  const magWord = magNorm >= 0.6 ? 'sharply' : magNorm >= 0.3 ? 'noticeably' : 'modestly';
+  const directs = eff.contributions.filter(c=>c.hop===1);
+  const seconds = eff.contributions.filter(c=>c.hop===2);
+
+  const parts = [];
+  parts.push(`<p><strong>${ind.name} ${directionWord} ${magWord} in this scenario.</strong></p>`);
+
+  if(directs.length){
+    parts.push(`<p><strong>Direct path${directs.length>1?'s':''}:</strong> ${directs.map(d=>{
+      const inp = ripple.inputs.find(i=>i.id===d.from.id);
+      const inpDir = inp ? (inp.dir==='up'?'↑':'↓') : '';
+      const dirWord = inp ? (inp.dir==='up'?'raised':'lowered') : 'moved';
+      const linkType = d.sign >= 0 ? 'positive' : 'negative';
+      return `you ${dirWord} <em>${d.from.name}</em> ${inpDir}, which has a <strong>${d.str}-strength ${linkType}</strong> link to ${ind.name}${d.note?` (${d.note.toLowerCase()})`:''}.`;
+    }).join(' ')}</p>`);
+  }
+
+  if(seconds.length){
+    parts.push(`<p><strong>Secondary path${seconds.length>1?'s':''}:</strong> ${seconds.map(s=>{
+      const viaEff = ripple.effects.find(e=>e.target.id===s.via.id);
+      const viaDir = viaEff && viaEff.amount >= 0 ? 'rising' : 'falling';
+      const linkType = s.sign >= 0 ? 'positive' : 'negative';
+      return `because <em>${s.via.name}</em> is ${viaDir} (1st-order effect), and ${s.via.name} has a ${s.str}-strength ${linkType} link to ${ind.name}.`;
+    }).join(' ')}</p>`);
+  }
+
+  parts.push(`<p><strong>How to read it:</strong> ${ind.how}</p>`);
+
+  const timingNote = ind.type === 'lead'
+    ? `As a leading indicator, ${ind.name} typically responds first — watch this carefully because it foreshadows the next 1–2 quarters.`
+    : ind.type === 'lag'
+    ? `As a lagging indicator, ${ind.name} reacts only after the dust settles — the move shows up over 4–8 quarters.`
+    : `As a coincident indicator, ${ind.name} moves alongside the broader cycle over 2–4 quarters.`;
+  parts.push(`<p><strong>Timing:</strong> ${timingNote}</p>`);
+
+  if(ind.example) parts.push(`<p><strong>Historical echo:</strong> ${ind.example}</p>`);
+
+  const pathStr = [...directs, ...seconds].slice(0,3).map(c=>{
+    if(c.hop===1) return `${c.from.name} → ${ind.name}`;
+    return `${ripple.inputs.find(i=>i.id===c.from.id)?.ind.name || c.from.name} → ${c.via.name} → ${ind.name}`;
+  }).join(' • ');
+  if(pathStr) parts.push(`<div class="path">Path: ${pathStr}</div>`);
+
+  return parts.join('');
+}
+
+function toggleExplain(id, e){
+  if(e){ e.stopPropagation(); }
+  const panel = document.getElementById('explain-'+id);
+  const btn = document.querySelector(`[data-testid="aff-explain-${id}"]`);
+  if(!panel) return;
+  const open = panel.classList.toggle('open');
+  if(btn) btn.classList.toggle('open', open);
+  if(btn) btn.firstChild.textContent = open ? 'Hide explanation' : 'Why does this move';
+}
+
+function drawImpactBars(ripple){
+  const c = document.getElementById('impactBars'); if(!c) return;
+  const eff = ripple.effects;
+  state.charts.bars = new Chart(c, {
+    type:'bar',
+    data:{
+      labels: eff.map(e=>e.target.name),
+      datasets:[{
+        data: eff.map(e=>+e.amount.toFixed(2)),
+        backgroundColor: eff.map(e=>e.amount>=0?'#2E5B4B':'#A73C3C'),
+        borderWidth:0,
+        borderSkipped:false,
+        barThickness:14,
+      }]
+    },
+    options:{
+      indexAxis:'y',
+      responsive:true,
+      maintainAspectRatio:false,
+      animation:{duration:600},
+      plugins:{
+        legend:{display:false},
+        tooltip:{
+          backgroundColor:'#FFFFFF',titleColor:'#5C5C58',bodyColor:'#1C1C1A',
+          borderColor:'#1C1C1A',borderWidth:1,cornerRadius:0,padding:12,
+          titleFont:{family:'JetBrains Mono',size:11},bodyFont:{family:'JetBrains Mono',size:11},
+          callbacks:{
+            title:(items)=> eff[items[0].dataIndex].target.name,
+            label:(ctx)=>{
+              const e = eff[ctx.dataIndex];
+              const cur = state.values[e.target.id]||0;
+              const proj = cur + e.amount;
+              return [
+                `Δ ${e.amount>=0?'+':''}${e.amount.toFixed(2)} ${e.target.unit}`,
+                `${cur.toFixed(2)} → ${proj.toFixed(2)}`,
+                `Materialises in ${TIMING[e.target.type]}`,
+              ];
+            }
+          }
+        }
+      },
+      scales:{
+        x:{
+          grid:{color:'#E2DFD8',drawTicks:false},
+          ticks:{color:'#8A8A86',font:{family:'JetBrains Mono',size:10}},
+          title:{display:true,text:'projected change (indicator units)',font:{family:'JetBrains Mono',size:10},color:'#5C5C58'}
+        },
+        y:{
+          grid:{display:false},
+          ticks:{color:'#1C1C1A',font:{family:'JetBrains Mono',size:11}}
+        }
+      }
+    }
+  });
+}
+
+function askForecastAI(){
+  const moves = Object.entries(state.forecast).filter(([,d])=>d&&d!=='flat').map(([id,d])=>`${IND_MAP[id].name}: ${d}`).join('\n');
+  const ripple = computeRipple();
+  const top = ripple ? ripple.effects.slice(0,5).map(e=>`${e.target.name}: ${e.amount>=0?'+':''}${e.amount.toFixed(2)} ${e.target.unit}`).join('\n') : '';
+  const prompt = `I'm analysing an Indian macro scenario.\n\nIndicators I'm moving:\n${moves}\n\nMy simulator's projected top effects:\n${top}\n\nGiven India's economic structure (services-heavy, oil-importing, growing fast), please walk me through:\n1. The most likely downstream effects in the next 2–3 quarters\n2. Which other indicators I should watch\n3. Two historical Indian episodes that resemble this scenario\n4. Where my simulator's reasoning could be wrong`;
+  window.open('https://gemini.google.com/app?q='+encodeURIComponent(prompt),'_blank');
+}
+
+// ─── LEARN ─────────────────────────────────────────
+function renderLearn(){
+  const q = state.searchQ.toLowerCase();
+  const indsShown = INDICATORS.filter(i=>
+    (state.filterType==='all'||i.type===state.filterType) &&
+    (!q||i.name.toLowerCase().includes(q)||i.what.toLowerCase().includes(q))
+  );
+  document.getElementById('main').innerHTML = `
+<div class="page">
+  <div class="eyebrow">An indicator a day</div>
+  <h1 class="disp" style="margin-bottom:18px">Every indicator,<br/><em>told properly.</em></h1>
+  <p class="lede" style="margin-bottom:36px">Long-form deep-dives on each of the 23 indicators — what it really measures, why it matters, how to read it, the common pitfalls, and how it connects to the rest of the economy.</p>
+  <div class="learn-grid" data-testid="learn-grid">
+    ${indsShown.map(ind=>`
+      <div class="learn-card" onclick="openDeepDive('${ind.id}','learn')" data-testid="learn-card-${ind.id}">
+        <div class="lc-cat"><span>${CATS[ind.cat].label}</span><span class="sb-badge ${ind.type==='lead'?'b-lead':ind.type==='lag'?'b-lag':'b-coin'}">${ind.type}</span></div>
+        <div class="lc-title">${ind.name}</div>
+        <div class="lc-desc">${ind.what}</div>
+        <div class="lc-more">Read deep-dive</div>
+      </div>
+    `).join('')}
+  </div>
+  ${indsShown.length===0?'<p class="prose" style="margin-top:24px;font-style:italic;color:var(--tx-3)">No indicators match your search.</p>':''}
+</div>`;
+}
+
+// ─── DEEP DIVE MODAL ──────────────────────────────
+function getContextBanner(ind, ctx){
+  const v = state.values[ind.id];
+  const st = statusOf(ind, v);
+  if(ctx === 'snapshot'){
+    const dir = v > ind.target ? 'above' : v < ind.target ? 'below' : 'at';
+    const dist = Math.abs(v - ind.target);
+    const distNorm = dist / Math.max(0.5, Math.abs(ind.wh - ind.wl));
+    const intensity = distNorm > 0.5 ? 'sharply' : distNorm > 0.2 ? 'meaningfully' : 'mildly';
+    const interp = (v > ind.target && ind.cat === 'inflation') ? 'This is a yellow flag — inflation above target tightens RBI policy.'
+      : (v < ind.target && ind.cat === 'gdp') ? 'Growth below target is a sign of lost momentum.'
+      : (st.txt === 'On target') ? 'This is right where macro thinkers want it.'
+      : '';
+    return `<div class="ctx-banner ctx-snap"><div class="ctx-eye">Right now</div><p><strong>${ind.name}</strong> is at <em>${v.toFixed(2)} ${ind.unit}</em> — ${intensity} ${dir} the target of ${ind.target} ${ind.unit}. ${interp} Status: <strong>${st.txt}</strong>.</p></div>`;
+  }
+  if(ctx === 'simulate'){
+    const ripple = computeRipple();
+    if(!ripple) return `<div class="ctx-banner ctx-sim"><div class="ctx-eye">Simulation context</div><p>No scenario set yet. Set at least one indicator direction on the Simulate tab to see how this indicator might move.</p></div>`;
+    const eff = ripple.effects.find(e=>e.target.id === ind.id);
+    const isInput = ripple.inputs.find(i=>i.id === ind.id);
+    if(isInput) return `<div class="ctx-banner ctx-sim"><div class="ctx-eye">Simulation context</div><p>This indicator is one of your <strong>scenario inputs</strong> — you set it to move <em>${isInput.dir}</em>. The cascade tree shows the downstream effects on the Simulate tab.</p></div>`;
+    if(eff){
+      const arrow = eff.amount >= 0 ? '↑' : '↓';
+      const proj = v + eff.amount;
+      return `<div class="ctx-banner ctx-sim"><div class="ctx-eye">Simulation context</div><p>In your current scenario this would move <em>${arrow} ${Math.abs(eff.amount).toFixed(2)} ${ind.unit}</em> over the next ${TIMING[ind.type]} — projecting <strong>${proj.toFixed(2)} ${ind.unit}</strong> from ${v.toFixed(2)}. Driven by ${eff.contributions.slice(0,2).map(c=>c.from.name).join(' & ')}.</p></div>`;
+    }
+    return `<div class="ctx-banner ctx-sim"><div class="ctx-eye">Simulation context</div><p>This indicator is <strong>not directly affected</strong> by your current scenario inputs. On the Simulate tab, use "Project any indicator" to see which inputs would move it.</p></div>`;
+  }
+  if(ctx === 'compare'){
+    const others = state.compareIds.filter(id=>id!==ind.id).map(id=>IND_MAP[id]).filter(Boolean);
+    if(!others.length) return '';
+    // Compute correlations
+    const lines = others.map(o=>{
+      const cl = corrAndLag(state.history[ind.id]||[], state.history[o.id]||[], 2);
+      if(!cl) return null;
+      const dir = cl.corr > 0 ? 'with' : 'against';
+      const strength = Math.abs(cl.corr) > 0.7 ? 'strongly' : Math.abs(cl.corr) > 0.4 ? 'meaningfully' : 'weakly';
+      return `<strong>${strength}</strong> ${dir} <em>${o.name}</em> (r = ${cl.corr.toFixed(2)})`;
+    }).filter(Boolean);
+    if(!lines.length) return '';
+    return `<div class="ctx-banner ctx-cmp"><div class="ctx-eye">In context of your comparison</div><p>${ind.name} moves ${lines.join(', ')} across overlapping history. Use the scatter view to spot non-linear surprises.</p></div>`;
+  }
+  return '';
+}
+
+function openDeepDive(id, ctx){
+  const ind = IND_MAP[id]; if(!ind) return;
+  ctx = ctx || state.tab || 'learn';
+  const v = state.values[id], st = statusOf(ind,v);
+  const banner = getContextBanner(ind, ctx);
+  const back = document.createElement('div');
+  back.className='dd-back'; back.dataset.testid='deep-dive-modal'; back.onclick=e=>{ if(e.target===back) closeDeepDive(); };
+  back.innerHTML = `
+  <div class="dd-modal">
+    <div class="dd-head">
+      <button class="dd-close" onclick="closeDeepDive()" data-testid="dd-close-btn">×</button>
+      <div class="dd-eyebrow">
+        <span>${CATS[ind.cat].label}</span>
+        <span>${ind.type==='lead'?'Leading':ind.type==='lag'?'Lagging':'Coincident'} indicator</span>
+        <span>Unit · ${ind.unit}</span>
+        <span style="color:var(--gold-d)">Opened from ${ctx.toUpperCase()}</span>
+      </div>
+      <h2 class="dd-title">${ind.name}</h2>
+      <p class="dd-lede">${ind.what}</p>
+    </div>
+    ${banner}
+    <div class="dd-body">
+      <div>
+        <div class="dd-section"><h4>Why it matters</h4><p>${ind.why}</p></div>
+        <div class="dd-section"><h4>An Indian example</h4><p>${ind.example}</p></div>
+        <div class="dd-section"><h4>How to read it</h4><p>${ind.how}</p></div>
+        <div class="dd-section"><h4>Common pitfall</h4><p>${ind.pitfall}</p></div>
+        <div class="dd-section">
+          <h4>What it pushes</h4>
+          <ul>${(ind.impacts||[]).map(i=>{const t=IND_MAP[i.to];return `<li><strong>${t?t.name:i.to}</strong> · <em>${i.str}</em> ${i.dir==='pos'?'positive':'negative'} link${i.note?` — ${i.note}`:''}</li>`}).join('')}</ul>
+        </div>
+        <div style="display:flex;gap:8px;flex-wrap:wrap;margin-top:24px">
+          <button class="btn btn-ai" onclick="askAI('${ind.id}','${ctx}')" data-testid="dd-ask-ai-${ind.id}">⌘ Ask AI to teach me this</button>
+          <button class="btn btn-secondary" onclick="closeDeepDive();setTab('simulate');setTimeout(()=>setFc('${ind.id}','up'),300)" data-testid="dd-simulate-${ind.id}">Simulate ↑ →</button>
+        </div>
+      </div>
+      <aside class="dd-cheatsheet">
+        <h5>Cheat sheet</h5>
+        <div class="dd-current">${fmtNum(v,ind.unit)}<span class="u">${ind.unit}</span></div>
+        <div class="dd-pos"><span class="ic-status ${st.cls}" style="margin-right:8px">${st.txt}</span>vs target ${ind.target}${ind.unit==='%'?'%':''}</div>
+        <div class="cs-row"><span class="k">Target</span><span class="v">${ind.target} ${ind.unit}</span></div>
+        <div class="cs-row"><span class="k">Healthy range</span><span class="v">${Math.min(ind.wl,ind.wh)} – ${Math.max(ind.wl,ind.wh)}</span></div>
+        <div class="cs-row"><span class="k">Type</span><span class="v">${ind.type.toUpperCase()}</span></div>
+        <div class="cs-row"><span class="k">Last value</span><span class="v">${ind._period || ind.fb.d}</span></div>
+        <div class="cs-row"><span class="k">Data source</span><span class="v">${ind._source || (ind.wb?'World Bank':'Manual / AI')}</span></div>
+        <div class="cs-chart"><canvas id="dd-chart"></canvas></div>
+      </aside>
+    </div>
+  </div>`;
+  document.body.appendChild(back); document.body.style.overflow='hidden';
+  setTimeout(()=>{
+    const data = state.history[id]||[];
+    if(!data.length) return;
+    const c = document.getElementById('dd-chart');
+    state.charts.dd = new Chart(c,{
+      type:'line',
+      data:{labels:data.map(d=>d.year),datasets:[{data:data.map(d=>d.value),borderColor:'#1C1C1A',backgroundColor:'rgba(28,28,26,0.06)',fill:true,borderWidth:1.5,pointRadius:0,tension:0.32}]},
+      options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{display:false},tooltip:{backgroundColor:'#FFFFFF',titleColor:'#5C5C58',bodyColor:'#1C1C1A',borderColor:'#1C1C1A',borderWidth:1,cornerRadius:0,padding:10,titleFont:{family:'JetBrains Mono',size:10},bodyFont:{family:'JetBrains Mono',size:11}}},scales:{x:{grid:{display:false},ticks:{color:'#8A8A86',font:{family:'JetBrains Mono',size:9},maxTicksLimit:5}},y:{grid:{color:'#E2DFD8'},ticks:{color:'#8A8A86',font:{family:'JetBrains Mono',size:9},maxTicksLimit:4}}}}
+    });
+  },60);
+}
+function closeDeepDive(){
+  document.querySelectorAll('.dd-back').forEach(b=>b.remove());
+  document.body.style.overflow='';
+  try{state.charts.dd&&state.charts.dd.destroy()}catch(e){}
+}
+function askAI(id, ctx){
+  const ind = IND_MAP[id];
+  const v = state.values[id];
+  const ctxIntro = ctx === 'simulate' ? 'I\'m running a macro simulation and need to understand this indicator in the context of cascading effects.'
+    : ctx === 'compare' ? 'I\'m comparing this indicator with others and want to understand its relationships and lead/lag behaviour.'
+    : ctx === 'snapshot' ? `India's current ${ind.name} is ${v} ${ind.unit}.`
+    : 'I\'m studying Indian macro from first principles.';
+  const prompt = `${ctxIntro}\n\nTeach me about "${ind.name}".\n\nWhat I know:\n- It measures: ${ind.what}\n- It matters because: ${ind.why}\n- Current value: ${v} ${ind.unit} (target ~${ind.target})\n\nPlease cover:\n1. A vivid real-world analogy\n2. Where it sits in India's economic cycle\n3. One concrete historical Indian moment when this gave a powerful signal\n4. How a young Indian investor should actually use this\n5. The biggest misconception people have about it\n\nTalk to me like an experienced teacher to a curious 20-year-old.`;
+  window.open('https://gemini.google.com/app?q='+encodeURIComponent(prompt),'_blank');
+}
+
+// ─── QUIZ ──────────────────────────────────────────
+const QCATS = {
+  theory:'Theory',
+  formula:'Formula',
+  scenario:'Scenario',
+  diagram:'Diagram',
+  impact:'Impact',
+  india:'India-specific',
+};
+
+// SVG helpers for diagram questions
+const Q_SVG = {
+  phillips: `<svg viewBox="0 0 220 140" width="220" height="140" style="background:var(--bg-page)"><path d="M20 120 Q60 110 90 80 T180 25" stroke="#1C1C1A" fill="none" stroke-width="2"/><circle cx="40" cy="115" r="4" fill="#D6A848"/><text x="40" y="135" font-family="JetBrains Mono" font-size="9" text-anchor="middle">A</text><circle cx="100" cy="70" r="4" fill="#D6A848"/><text x="100" y="60" font-family="JetBrains Mono" font-size="9" text-anchor="middle">B</text><circle cx="160" cy="35" r="4" fill="#D6A848"/><text x="170" y="35" font-family="JetBrains Mono" font-size="9">C</text><text x="110" y="138" font-family="JetBrains Mono" font-size="9" text-anchor="middle" fill="#8A8A86">unemployment →</text><text x="14" y="70" font-family="JetBrains Mono" font-size="9" text-anchor="end" fill="#8A8A86" transform="rotate(-90 14 70)">inflation</text></svg>`,
+  yield_normal: `<svg viewBox="0 0 220 110" width="220" height="110" style="background:var(--bg-page)"><path d="M20 80 Q70 70 110 50 T200 25" stroke="#2E5B4B" stroke-width="2" fill="none"/><text x="20" y="100" font-family="JetBrains Mono" font-size="9" fill="#8A8A86">3m</text><text x="105" y="100" font-family="JetBrains Mono" font-size="9" text-anchor="middle" fill="#8A8A86">5y</text><text x="200" y="100" font-family="JetBrains Mono" font-size="9" text-anchor="end" fill="#8A8A86">30y</text><text x="14" y="50" font-family="JetBrains Mono" font-size="9" text-anchor="end" fill="#8A8A86" transform="rotate(-90 14 50)">yield</text></svg>`,
+  yield_inverted: `<svg viewBox="0 0 220 110" width="220" height="110" style="background:var(--bg-page)"><path d="M20 25 Q70 35 110 55 T200 80" stroke="#A73C3C" stroke-width="2" fill="none"/><text x="20" y="100" font-family="JetBrains Mono" font-size="9" fill="#8A8A86">3m</text><text x="105" y="100" font-family="JetBrains Mono" font-size="9" text-anchor="middle" fill="#8A8A86">5y</text><text x="200" y="100" font-family="JetBrains Mono" font-size="9" text-anchor="end" fill="#8A8A86">30y</text><text x="14" y="50" font-family="JetBrains Mono" font-size="9" text-anchor="end" fill="#8A8A86" transform="rotate(-90 14 50)">yield</text></svg>`,
+  cycle: `<svg viewBox="0 0 240 100" width="240" height="100" style="background:var(--bg-page)"><path d="M10 60 Q40 30 80 30 T150 70 T220 30" stroke="#1C1C1A" fill="none" stroke-width="2"/><circle cx="40" cy="40" r="5" fill="#2E5B4B"/><text x="40" y="22" font-family="JetBrains Mono" font-size="9" text-anchor="middle">A</text><circle cx="115" cy="55" r="5" fill="#D6A848"/><text x="115" y="78" font-family="JetBrains Mono" font-size="9" text-anchor="middle">B</text><circle cx="190" cy="50" r="5" fill="#A73C3C"/><text x="190" y="32" font-family="JetBrains Mono" font-size="9" text-anchor="middle">C</text><text x="120" y="98" font-family="JetBrains Mono" font-size="9" text-anchor="middle" fill="#8A8A86">time →</text></svg>`,
+  pmi: `<svg viewBox="0 0 240 110" width="240" height="110" style="background:var(--bg-page)"><line x1="10" y1="60" x2="230" y2="60" stroke="#8A8A86" stroke-dasharray="3,3"/><text x="232" y="63" font-family="JetBrains Mono" font-size="9" fill="#8A8A86">50</text><polyline points="10,75 40,68 70,55 100,45 130,40 160,48 190,58 220,70" stroke="#2E5B4B" fill="none" stroke-width="2"/><circle cx="130" cy="40" r="4" fill="#D6A848"/><text x="130" y="30" font-family="JetBrains Mono" font-size="9" text-anchor="middle">peak</text><text x="115" y="105" font-family="JetBrains Mono" font-size="9" text-anchor="middle" fill="#8A8A86">time →</text></svg>`,
+};
+
+const QUIZ = [
+  // THEORY
+  {cat:'theory', q:'If RBI cuts the repo rate, the most direct effect within 2–3 quarters is:', opts:['Higher inflation immediately','Cheaper loans & rising credit growth','Stronger rupee','Higher fiscal deficit'], a:1, ex:'Repo rate cuts lower bank borrowing costs, lifting credit growth — the fastest visible channel.'},
+  {cat:'theory', q:'Which is a LEADING indicator?', opts:['Unemployment rate','Manufacturing PMI','Annual GDP growth','Trade balance'], a:1, ex:'PMI is published 4–6 weeks before actual production data, making it a classic leading indicator.'},
+  {cat:'theory', q:'Which indicator most directly measures the cost of money?', opts:['CPI Inflation','Repo rate','M3','Fiscal deficit'], a:1, ex:'The repo rate is the rate at which RBI lends to commercial banks — the foundational cost of money.'},
+  {cat:'theory', q:'A "coincident" indicator is one that:', opts:['Moves before the cycle turns','Moves alongside the cycle','Moves after the cycle turns','Is unrelated to the cycle'], a:1, ex:'Coincident indicators like GDP growth move in sync with the broader economic cycle.'},
+  {cat:'theory', q:'Why is unemployment called a lagging indicator?', opts:['It is measured monthly','Firms hire/fire only after growth changes are confirmed','It is hard to measure','It uses surveys'], a:1, ex:'Firms delay hiring or layoff decisions until growth changes are clear, so unemployment moves after the cycle.'},
+  {cat:'theory', q:'Core inflation is calculated by:', opts:['Adding food and fuel weights','Stripping out food and fuel','Using only services','Averaging over 5 years'], a:1, ex:'Core inflation removes volatile food and fuel components to reveal underlying price pressure.'},
+  {cat:'theory', q:'The fiscal multiplier of government capex in India is approximately:', opts:['0.5x','1x','2–2.5x','5x'], a:2, ex:'RBI/IMF estimates put India\'s capex multiplier at 2–2.5x — every ₹1 of capex creates ₹2–2.5 of activity.'},
+  {cat:'theory', q:'India\'s CPI basket is dominated by:', opts:['Energy','Manufactured goods','Food (~46%)','Services'], a:2, ex:'Food has ~46% weight, making monsoon and vegetable shocks dominant inflation drivers.'},
+
+  // FORMULA
+  {cat:'formula', q:'If real GDP is ₹160 lakh crore and grew 7%, what was last year\'s real GDP (rounded)?', opts:['₹148 lakh crore','₹150 lakh crore','₹152 lakh crore','₹172 lakh crore'], a:0, ex:'160 / 1.07 ≈ 149.5 lakh crore → ₹148–150 range.'},
+  {cat:'formula', q:'A country has $700B reserves and imports $720B/year. Import cover is roughly:', opts:['1.2 months','5 months','12 months','24 months'], a:2, ex:'Reserves / (imports / 12) = 700 / 60 ≈ 11.7 months ~ 12.'},
+  {cat:'formula', q:'CPI was 180 last year and is 189 now. Inflation is:', opts:['4.5%','5.0%','9.0%','10.0%'], a:1, ex:'(189-180)/180 = 9/180 = 5.0%.'},
+  {cat:'formula', q:'PMI new-orders 56, output 54, employment 51. The composite (simple avg) is:', opts:['51','52','53.7','55'], a:2, ex:'(56+54+51)/3 = 53.67. Above 50 means expanding overall.'},
+  {cat:'formula', q:'If fiscal deficit is ₹17 lakh crore and nominal GDP is ₹340 lakh crore, deficit/GDP is:', opts:['3%','4%','5%','6%'], a:2, ex:'17/340 = 5%.'},
+  {cat:'formula', q:'Apply Okun\'s rule (India): GDP grows 3pp above potential. Unemployment should fall by about:', opts:['0.2pp','0.6pp','1pp','3pp'], a:1, ex:'Indian Okun coefficient ≈ 0.2 per pp of growth gap → 3 × 0.2 = 0.6pp.'},
+  {cat:'formula', q:'Bank loans were ₹130 lakh crore; now ₹148 lakh crore. Loan growth (YoY) is approximately:', opts:['9%','12%','14%','18%'], a:2, ex:'(148-130)/130 ≈ 13.8% ≈ 14%.'},
+  {cat:'formula', q:'Net exports = exports - imports. If exports are $440B and imports $720B, net exports are:', opts:['+$280B','-$280B','-$160B','+$160B'], a:1, ex:'440 - 720 = -$280B. India runs a structural goods deficit.'},
+  {cat:'formula', q:'GDP deflator = (Nominal/Real) × 100. If nominal GDP grew 11% and real GDP grew 7%, deflator inflation was about:', opts:['2%','4%','7%','11%'], a:1, ex:'1.11/1.07 - 1 ≈ 3.7% ≈ 4%.'},
+  {cat:'formula', q:'If money supply M3 grows 12% and real GDP grows 7%, the implied "extra" money chasing the same goods is approximately:', opts:['1%','5%','12%','19%'], a:1, ex:'Per the quantity theory, excess money growth ≈ M3 growth - real GDP growth = 12 - 7 = 5%.'},
+  {cat:'formula', q:'A ₹50 lakh home loan at 8.5% becomes how much cheaper monthly if rates drop to 8.0% (20-yr tenor)?', opts:['~₹500','~₹1,500','~₹3,000','~₹5,000'], a:1, ex:'EMI ≈ ₹43,400 at 8.5% vs ₹41,800 at 8.0% — saves ~₹1,600/month.'},
+
+  // SCENARIO
+  {cat:'scenario', q:'Oil prices spike 30%. Which Indian indicator typically moves FIRST (within 1–2 months)?', opts:['Unemployment','Fiscal deficit','WPI manufacturing & CPI fuel','GDP growth'], a:2, ex:'Energy costs hit factory gates and pumps immediately, lifting WPI and the fuel sub-index of CPI.'},
+  {cat:'scenario', q:'A bumper monsoon arrives after a drought. Which indicator improves FIRST?', opts:['Fiscal deficit','Food inflation','Manufacturing PMI','Forex reserves'], a:1, ex:'Better rains lower kharif crop prices within 1–2 quarters, cooling food inflation.'},
+  {cat:'scenario', q:'Apple opens 3 new iPhone factories in Tamil Nadu. Which indicator gets the most direct lift?', opts:['Manufacturing PMI & exports','Forex reserves only','Repo rate','Unemployment (rises)'], a:0, ex:'New factories show up in PMI new orders & electronics exports — both rise.'},
+  {cat:'scenario', q:'US Fed hikes 50bps. India\'s most likely immediate response in markets:', opts:['Rupee weakens, FPI outflows, RBI may intervene','Rupee strengthens, FPI inflows','No effect','Repo rate falls automatically'], a:0, ex:'Higher US yields attract capital out of EMs, weakening the rupee and pressuring RBI.'},
+  {cat:'scenario', q:'GST collections hit a record high. The fastest read on what this signals is:', opts:['Demand is firm — supports growth narrative','Inflation is rising','Unemployment is falling','Reserves are growing'], a:0, ex:'Strong GST = strong nominal consumption + business activity. Best near-real-time growth proxy India has.'},
+  {cat:'scenario', q:'Vegetable prices triple in a month due to floods. Which indicators react in the SAME month?', opts:['Repo rate','Food inflation, headline CPI','Trade balance','Unemployment'], a:1, ex:'Vegetable shocks move food CPI immediately; headline CPI follows in the same month\'s print.'},
+  {cat:'scenario', q:'Government announces ₹2 lakh crore additional capex. Multiplier-based GDP impact in FY+1 is roughly:', opts:['₹1 lakh crore','₹2 lakh crore','₹4–5 lakh crore','₹10 lakh crore'], a:2, ex:'Capex multiplier 2–2.5x → ₹2L cr × ~2.25 ≈ ₹4.5 lakh crore additional GDP.'},
+  {cat:'scenario', q:'RBI hikes repo by 75bps over 6 months. Which sequence reflects reality?', opts:['Loan growth slows → consumer spending cools → inflation eases','Inflation eases → loan growth slows → spending cools','Spending cools instantly','Nothing changes for 2 years'], a:0, ex:'Hikes hit credit first, then dent spending, and finally cool inflation — the classic transmission chain.'},
+  {cat:'scenario', q:'A war in West Asia closes a key oil shipping route. Which Indian indicators turn worse FIRST?', opts:['Unemployment','Forex reserves & trade balance','Consumer confidence','Fiscal deficit'], a:1, ex:'Oil imports get pricier instantly — trade deficit widens and dollar demand drains reserves.'},
+  {cat:'scenario', q:'Indian IT services lose a major US client. The first signal in macro data appears in:', opts:['Services PMI new orders & services exports','Forex reserves','Repo rate','Unemployment (immediately)'], a:0, ex:'Services PMI new-orders sub-index and services-exports data are the earliest channels.'},
+  {cat:'scenario', q:'Inflation expected to undershoot RBI\'s 4% target for several quarters. Likely policy:', opts:['Aggressive rate hikes','Rate cuts and liquidity easing','Cut government spending','Raise GST'], a:1, ex:'Below-target inflation gives the RBI room to cut and ease liquidity to support growth.'},
+  {cat:'scenario', q:'After Covid lockdowns ended, the strongest rebound in any single indicator was in:', opts:['Consumer durables (cars, AC, fridges)','Loan growth','Fiscal deficit','Forex reserves'], a:0, ex:'Pent-up demand drove durables sales to record highs in FY22 — classic post-shock release.'},
+
+  // DIAGRAM
+  {cat:'diagram', svg:Q_SVG.phillips, q:'On this Phillips curve diagram, point C represents:', opts:['High unemployment & low inflation (recession)','Low unemployment & high inflation (overheating)','Stable economy','Stagflation'], a:1, ex:'Top-left of a Phillips curve = low unemployment + high inflation, classic overheating.'},
+  {cat:'diagram', svg:Q_SVG.phillips, q:'In the SAME diagram, what does moving from A → C reflect?', opts:['Improving prosperity','Falling unemployment paid for with rising inflation','Recession','Disinflation'], a:1, ex:'Movement up the Phillips curve trades lower unemployment for higher inflation.'},
+  {cat:'diagram', svg:Q_SVG.yield_normal, q:'This yield curve shape (rising) typically signals:', opts:['Imminent recession','Normal economic expectations','Liquidity crunch','Deflation'], a:1, ex:'Upward-sloping yield curves are normal — longer bonds yield more for time/inflation risk.'},
+  {cat:'diagram', svg:Q_SVG.yield_inverted, q:'An inverted yield curve like this historically signals:', opts:['Imminent expansion','High probability of recession in 12–18 months','Higher GDP growth ahead','Lower inflation immediately'], a:1, ex:'Curve inversion preceded most US recessions; markets expect rate cuts due to slowing growth.'},
+  {cat:'diagram', svg:Q_SVG.cycle, q:'On this stylised business cycle, point B is the:', opts:['Peak','Trough','Mid-cycle','Recovery'], a:1, ex:'B is the bottom of the curve — the trough of the cycle.'},
+  {cat:'diagram', svg:Q_SVG.cycle, q:'On the same diagram, between A and B the economy is in:', opts:['Expansion','Contraction','Stable phase','Recovery'], a:1, ex:'Falling from peak (A) to trough (B) is contraction.'},
+  {cat:'diagram', svg:Q_SVG.pmi, q:'The dashed line at 50 in this PMI chart represents:', opts:['Inflation target','Expansion/contraction threshold','Repo rate','Year-on-year growth'], a:1, ex:'PMI > 50 = expansion; PMI < 50 = contraction. The dashed line is that critical boundary.'},
+  {cat:'diagram', svg:Q_SVG.pmi, q:'The marked peak in this PMI series most likely precedes peaks in:', opts:['Repo rate','Industrial production (IIP)','Fiscal deficit','Trade balance'], a:1, ex:'PMI is a leading indicator — IIP typically peaks 1–2 quarters after PMI peaks.'},
+
+  // IMPACT
+  {cat:'impact', q:'A wider trade deficit usually causes:', opts:['Rupee strengthens','Rupee weakens','No FX impact','Inflation falls'], a:1, ex:'More dollars demanded for imports → rupee depreciates → imported inflation can follow.'},
+  {cat:'impact', q:'Higher repo rate, ceteris paribus, leads to:', opts:['Lower loan growth, cooler inflation, slower GDP','Higher loan growth','Faster GDP growth','Lower fiscal deficit immediately'], a:0, ex:'Standard monetary transmission: rates ↑ → credit ↓ → demand ↓ → inflation eases, growth slows.'},
+  {cat:'impact', q:'A surge in FDI inflows tends to:', opts:['Lower forex reserves','Strengthen the rupee and boost reserves','Raise inflation','Lower GDP growth'], a:1, ex:'FDI brings dollars in, which RBI absorbs into reserves and which support the rupee.'},
+  {cat:'impact', q:'GDP growth surprises strongly on the upside. The lagging indicator that should respond:', opts:['Unemployment falls eventually','Loan growth instantly','Repo rate immediately','Inflation falls'], a:0, ex:'Unemployment is a lagging indicator — it should fall a few quarters after sustained growth.'},
+  {cat:'impact', q:'Persistent rise in core inflation typically forces RBI to:', opts:['Cut rates','Hold or hike rates','Print more money','Increase fiscal deficit'], a:1, ex:'Sticky core inflation signals demand-side pressure → RBI tightens or holds restrictive policy.'},
+  {cat:'impact', q:'A rise in oil prices most affects which Indian indicators?', opts:['Trade deficit widens, CPI rises, fiscal deficit pressured','Loan growth rises','Unemployment falls','Forex reserves rise'], a:0, ex:'Oil = ~25% of India\'s import bill. Higher crude widens deficit, lifts inflation, strains fiscal subsidies.'},
+  {cat:'impact', q:'A drop in business confidence today shows up in which indicator 2–3 quarters later?', opts:['Capex / GFCF','Repo rate','Forex reserves','Food inflation'], a:0, ex:'Confidence leads investment decisions; weak confidence means firms postpone capex 2–3 quarters out.'},
+  {cat:'impact', q:'Loan growth above 18% sustained for years can lead to:', opts:['Lower NPAs','Bubble risk and rising NPAs eventually','Faster fiscal consolidation','Lower inflation'], a:1, ex:'Excessive credit growth often precedes credit-quality stress — banks chase loans, NPAs build later.'},
+  {cat:'impact', q:'If consumer confidence collapses to 70 from 100, the first observable consequence is:', opts:['Lower durables spending in 1 quarter','Lower repo rate','Trade balance worsens','Forex falls'], a:0, ex:'Confidence falls first → households delay big-ticket purchases → durables sales drop one quarter later.'},
+  {cat:'impact', q:'Government capex spending grows 25% YoY. The likely downstream chain is:', opts:['GFCF↑ → GDP↑ → employment↑ → consumer spending↑','Inflation↓ → repo rate↓','Trade balance↑ immediately','Forex reserves↑ immediately'], a:0, ex:'Capex → investment → growth → jobs → consumption. The classic multiplier chain.'},
+
+  // INDIA SPECIFIC
+  {cat:'india', q:'Services share of India\'s GDP is approximately:', opts:['25%','40%','55%','75%'], a:2, ex:'Services contribute ~55% of India\'s GDP — that\'s why Services PMI matters more than mfg PMI.'},
+  {cat:'india', q:'Forex reserves at ~$700B currently cover roughly how many months of imports?', opts:['1','3','6','11–12'], a:3, ex:'$700B / ($60B/mo) ≈ 11.7 months — comfortably above the 3-month minimum.'},
+  {cat:'india', q:'India\'s FY26 fiscal deficit target is approximately:', opts:['2%','3.5%','4.4–4.5%','7%'], a:2, ex:'Centre targets 4.4–4.5% of GDP in FY26, glidepath to 4.5% by FY26.'},
+  {cat:'india', q:'RBI\'s inflation target is:', opts:['2% ±1%','4% ±2%','6% ±2%','No formal target'], a:1, ex:'Since 2016, RBI is mandated to keep CPI at 4% ± 2% — flexible inflation targeting.'},
+  {cat:'india', q:'Which sequence is correct for India\'s economic story since 2014?', opts:['Demonetisation → GST → Covid → Capex surge','GST → Demonetisation → Capex → Covid','Covid → GST → Demonetisation','Capex first, GST last'], a:0, ex:'Demonetisation (Nov 2016) → GST (Jul 2017) → Covid shock (Mar 2020) → post-Covid capex revival.'},
+  {cat:'india', q:'India\'s share of global IT services exports is approximately:', opts:['5%','15%','55%','75%'], a:1, ex:'India captures ~15% of global IT/BPM services exports — a critical dollar earner.'},
+  {cat:'india', q:'The single largest item in India\'s import bill is:', opts:['Electronics','Gold','Crude oil & petroleum','Machinery'], a:2, ex:'Crude + petroleum products dominate India\'s import bill, around 25%+ of total imports.'},
+  {cat:'india', q:'Most of India\'s GDP growth in the post-Covid period (FY22–FY25) was driven by:', opts:['Exports','Government capex + private consumption','Agriculture only','FII inflows'], a:1, ex:'Government capex rose from ₹4.8L cr to ₹11.1L cr; consumption rebounded. Together they drove growth.'},
+];
+
+function renderQuiz(){
+  if(state.quizCat === undefined) state.quizCat = 'all';
+  const filtered = state.quizCat === 'all' ? QUIZ : QUIZ.filter(q=>q.cat === state.quizCat);
+  if(!filtered.length){ state.quizCat = 'all'; renderQuiz(); return; }
+  const idx = state.quizIdx % filtered.length;
+  const q = filtered[idx];
+  document.getElementById('main').innerHTML = `
+<div class="page">
+  <div class="eyebrow">Test your instinct</div>
+  <h1 class="disp" style="margin-bottom:18px">${QUIZ.length}+ questions<br/>to <em>train the eye.</em></h1>
+  <p class="lede" style="margin-bottom:24px">Mix of theory, formulas, real-world scenarios, diagrams and cause-effect chains. Pick a category or stay on all.</p>
+
+  <div class="quiz-cats" data-testid="quiz-cats">
+    <button class="qc-btn ${state.quizCat==='all'?'on':''}" onclick="setQuizCat('all')" data-testid="qc-all">All <span class="qc-n">${QUIZ.length}</span></button>
+    ${Object.entries(QCATS).map(([k,lbl])=>{
+      const n = QUIZ.filter(q=>q.cat===k).length;
+      return `<button class="qc-btn ${state.quizCat===k?'on':''}" onclick="setQuizCat('${k}')" data-testid="qc-${k}">${lbl} <span class="qc-n">${n}</span></button>`;
+    }).join('')}
+  </div>
+
+  <div class="quiz-meta">
+    <div class="qm-prog">Question <strong>${idx+1}</strong> / ${filtered.length}</div>
+    <div class="qm-bar"><div class="qm-fill" style="width:${((idx+1)/filtered.length)*100}%"></div></div>
+    <div class="qm-score">Score <strong>${state.quizScore}</strong></div>
+  </div>
+
+  <div class="quiz-card" data-testid="quiz-card">
+    <div class="q-tag">${QCATS[q.cat]||'Theory'}</div>
+    ${q.svg ? `<div class="q-diagram">${q.svg}</div>` : ''}
+    <div class="q-question">${q.q}</div>
+    <div class="q-options" data-testid="quiz-options">
+      ${q.opts.map((o,i)=>`<button class="q-opt ${state.quizAns!=null?(i===q.a?'correct':(i===state.quizAns?'wrong':'')):''}" onclick="answerQuiz(${i})" data-testid="quiz-opt-${i}" ${state.quizAns!=null?'disabled':''}>${String.fromCharCode(65+i)}.  ${o}</button>`).join('')}
+    </div>
+    ${state.quizAns!=null?`<div class="q-explain"><strong>${state.quizAns===q.a?'Right.':'Not quite.'}</strong> ${q.ex}</div>
+    <div style="margin-top:18px;display:flex;gap:8px;flex-wrap:wrap"><button class="btn btn-primary" onclick="nextQuiz()" data-testid="quiz-next-btn">Next →</button><button class="btn btn-secondary" onclick="resetQuiz()" data-testid="quiz-reset-btn">Reset score</button></div>`:''}
+  </div>
+</div>`;
+}
+function setQuizCat(c){ state.quizCat = c; state.quizIdx = 0; state.quizAns = null; renderQuiz(); }
+function answerQuiz(i){
+  const filtered = state.quizCat === 'all' ? QUIZ : QUIZ.filter(q=>q.cat === state.quizCat);
+  const q = filtered[state.quizIdx % filtered.length];
+  state.quizAns = i;
+  if(i === q.a) state.quizScore++;
+  renderQuiz();
+}
+function nextQuiz(){ state.quizAns = null; state.quizIdx++; renderQuiz(); }
+function resetQuiz(){ state.quizScore = 0; state.quizIdx = 0; state.quizAns = null; renderQuiz(); }
+
+// ─── AI PROMPT HELPERS ───────────────────────────
+window.getAIPrompt = ()=> `Collect the latest available data for India from official government, central bank, regulator, or other primary sources wherever possible. If an official source does not publish the indicator, use a widely recognized and trusted secondary source (e.g., S&P Global, CMIE, Trading Economics, World Bank, IMF, OECD).
+
+Return the results as a markdown table with exactly these 4 columns:
+| Name of Indicator | Value | Date Updated | Source |
+
+Requirements:
+* Use the most recent value available for each indicator.
+* Keep the unit, scale, and format exactly as reported by the source.
+* Do not normalize, convert, or recalculate values unless specifically instructed below.
+* Preserve all decimal places shown by the source.
+* Use the latest publication/update date associated with the reported value.
+* Include the source name (and source organization where applicable).
+* Do not add any commentary, notes, explanations, or text outside the table.
+
+Special instructions:
+1. Gross Fixed Capital Formation → Report as % of GDP.
+2. Money Supply (M3) → Report YoY growth rate (%).
+3. Exports Growth → Report YoY growth rate (%).
+4. Foreign Direct Investment → Report current financial year inflows only.
+5. Fiscal Deficit → Report as % of GDP.
+6. Government Capital Expenditure → Report as % of GDP (or latest officially reported equivalent if % of GDP is unavailable).
+7. Electricity Production → Report YoY growth rate (%).
+8. Consumer Spending Growth → Report growth rate (%).
+9. Forex Reserves → Report in USD Billions.
+10. Foreign Direct Investment → Report in USD Billions (not millions).
+
+Use the following indicator order exactly:
+1. Quarterly GDP Growth Rate
+2. Annual GDP Growth Rate
+3. Gross Fixed Capital Formation
+4. CPI Inflation
+5. Food Inflation
+6. WPI Manufacturing
+7. RBI Repo Rate
+8. Money Supply M3
+9. Credit / Loan Growth
+10. Forex Reserves
+11. Unemployment Rate
+12. Trade Balance
+13. Exports Growth
+14. Foreign Direct Investment
+15. Fiscal Deficit
+16. Government Capital Expenditure
+17. Manufacturing PMI
+18. Services PMI
+19. Industrial Production (IIP)
+20. Electricity Production
+21. Business Confidence
+22. Consumer Confidence
+23. Consumer Spending Growth
+
+Source Priority (highest to lowest):
+1. Government of India ministries and agencies (MOSPI, DPIIT, Ministry of Finance, Ministry of Commerce & Industry, Labour Bureau, etc.)
+2. Reserve Bank of India (RBI)
+3. Official regulator or statutory authority publications
+4. S&P Global PMI
+5. CMIE
+6. IMF, World Bank, OECD
+7. Other reputable financial data providers
+
+If multiple sources publish the same indicator, prefer the highest-priority source above. Use only one source per indicator.`;
+window.copyAIPrompt = async ()=>{
+  try{ await navigator.clipboard.writeText(window.getAIPrompt()); flashLive('Prompt copied to clipboard'); }
+  catch(e){ alert('Copy failed — please copy the prompt manually.') }
+};
+window.openAI = async ()=>{
+  const prompt = window.getAIPrompt();
+  window.open('https://gemini.google.com/app?q='+encodeURIComponent(prompt),'_blank');
+};
+function flashLive(msg){
+  const el = document.getElementById('liveTxt');
+  const old = el.textContent; el.textContent=msg;
+  setTimeout(()=>el.textContent=old, 2200);
+}
+
+// ─── EVENT WIRING ─────────────────────────────────
+document.addEventListener('click', e=>{
+  const t = e.target.closest('.tab-btn');
+  if(t) setTab(t.dataset.tab);
+});
+document.getElementById('globalSearch').addEventListener('input', e=>{
+  state.searchQ = e.target.value;
+  renderSidebar();
+  if(state.tab==='learn'||state.tab==='snapshot') (state.tab==='learn'?renderLearn:renderSnapshot)();
+});
+window.addEventListener('keydown', e=>{
+  if(e.key==='Escape') closeDeepDive();
+  if(e.key==='/' && document.activeElement.tagName!=='INPUT'){ e.preventDefault(); document.getElementById('globalSearch').focus(); }
+});
+window.addEventListener('resize', ()=>{ if(state.tab==='simulate') renderSimResults(); });
+
+// Expose for inline onclick
+window.setTab=setTab; window.setFilter=setFilter; window.onSbClick=onSbClick;
+window.openDeepDive=openDeepDive; window.closeDeepDive=closeDeepDive; window.askAI=askAI;
+window.addCompare=addCompare; window.removeCompare=removeCompare; window.setCmpView=setCmpView; window.loadPreset=loadPreset;
+window.setFc=setFc; window.clearFc=clearFc; window.askForecastAI=askForecastAI;
+window.projectIndicator=projectIndicator; window.toggleExplain=toggleExplain; window.closest_card_scroll=closest_card_scroll;
+window.editValue=editValue; window.commitEdit=commitEdit; window.togglePaste=togglePaste; window.parsePastedAI=parsePastedAI;
+window.answerQuiz=answerQuiz; window.nextQuiz=nextQuiz; window.setQuizCat=setQuizCat; window.resetQuiz=resetQuiz; window.loadLiveData=loadLiveData;
+
+// ─── BOOT ─────────────────────────────────────────
+renderSidebar();
+setTab('about');
+loadLiveData();
+
+// Chart.js global defaults
+Chart.defaults.font.family = "'JetBrains Mono', monospace";
+Chart.defaults.color = '#5C5C58';
+Chart.defaults.borderColor = '#E2DFD8';
+</script>
+
+<!-- FOOTER -->
+<footer style="margin-top:64px;border-top:1px solid var(--line);background:var(--bg-surface);padding:40px 32px 32px;font-family:var(--sans)">
+  <div style="max-width:1480px;margin:0 auto;display:flex;flex-direction:column;gap:16px">
+
+    <!-- Brand line -->
+    <div style="font-family:var(--serif);font-size:20px;font-weight:500;color:var(--tx-1);display:flex;align-items:baseline;gap:6px">
+      <span style="display:inline-block;width:6px;height:6px;background:var(--gold);transform:translateY(-2px)"></span>
+      India <em style="font-style:italic;color:var(--tx-2);font-weight:400">Macro</em> Lens
+    </div>
+
+    <!-- Tagline -->
+    <p style="font-size:13px;color:var(--tx-2);font-weight:300;line-height:1.6">An independent, educational reading of India's macro story.</p>
+
+    <!-- Built by -->
+    <p style="font-size:13px;color:var(--tx-2);font-weight:300">Built by <strong style="font-weight:500;color:var(--tx-1)">Yash Boghani</strong> &middot; Get in touch</p>
+
+    <!-- Contact icons -->
+    <div style="display:flex;align-items:center;gap:12px">
+      <!-- LinkedIn -->
+      <a href="https://www.linkedin.com/in/yash-boghani-54a3a4276/" target="_blank" rel="noopener noreferrer"
+         title="LinkedIn — Yash Boghani"
+         style="display:inline-flex;align-items:center;justify-content:center;width:36px;height:36px;border:1px solid var(--line);background:var(--bg-elev);color:var(--tx-2);transition:all .15s;text-decoration:none"
+         onmouseover="this.style.background='#0A66C2';this.style.color='#fff';this.style.borderColor='#0A66C2'"
+         onmouseout="this.style.background='var(--bg-elev)';this.style.color='var(--tx-2)';this.style.borderColor='var(--line)'">
+        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="currentColor">
+          <path d="M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433a2.062 2.062 0 0 1-2.063-2.065 2.064 2.064 0 1 1 2.063 2.065zm1.782 13.019H3.555V9h3.564v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.222 0h.003z"/>
+        </svg>
+      </a>
+
+      <!-- Gmail -->
+      <a href="mailto:yashboghani69@gmail.com"
+         title="Email — yashboghani69@gmail.com"
+         style="display:inline-flex;align-items:center;justify-content:center;width:36px;height:36px;border:1px solid var(--line);background:var(--bg-elev);color:var(--tx-2);transition:all .15s;text-decoration:none"
+         onmouseover="this.style.background='#EA4335';this.style.color='#fff';this.style.borderColor='#EA4335'"
+         onmouseout="this.style.background='var(--bg-elev)';this.style.color='var(--tx-2)';this.style.borderColor='var(--line)'">
+        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="currentColor">
+          <path d="M24 5.457v13.909c0 .904-.732 1.636-1.636 1.636h-3.819V11.73L12 16.64l-6.545-4.91v9.273H1.636A1.636 1.636 0 0 1 0 19.366V5.457c0-2.023 2.309-3.178 3.927-1.964L5.455 4.64 12 9.548l6.545-4.909 1.528-1.145C21.69 2.28 24 3.434 24 5.457z"/>
+        </svg>
+      </a>
+    </div>
+
+    <!-- Divider -->
+    <div style="border-top:1px solid var(--line);padding-top:16px;margin-top:4px;font-size:11px;color:var(--tx-3);font-family:var(--mono);letter-spacing:0.04em;line-height:1.8">
+      Data: World Bank &middot; IMF/IFS via DBnomics &middot; Not financial advice &middot; &copy; <script>document.write(new Date().getFullYear())</script>
+    </div>
+
+  </div>
+</footer>
+
+</body>
+</html>
