@@ -795,21 +795,30 @@ async function loadLiveData(){
   if(state.tab==='compare') renderCompare();
 }
 // Direct WB fallback if our backend proxy isn't reachable
-async function loadLiveDataDirect(){
-  const live = INDICATORS.filter(i=>i.wb);
-  await Promise.all(live.map(async ind=>{
-    try{
-      const r = await fetch(`https://api.worldbank.org/v2/country/IN/indicator/${ind.wb}?format=json&per_page=30`);
-      const j = await r.json();
-      if(!j[1]) return;
-      const points = j[1].filter(d=>d.value!=null).map(d=>({year:String(d.date), value:+d.value})).sort((a,b)=>a.year.localeCompare(b.year));
-      if(points.length){
-        state.history[ind.id]=points;
-        state.values[ind.id]=points[points.length-1].value;
+async function loadLiveData(){
+  document.getElementById('liveTxt').textContent = 'Fetching latest data…';
+  
+  // Force static direct fetching from World Bank instead of a missing Node backend
+  await loadLiveDataDirect();
+  
+  // Synthetic histories fallback logic for indicators with no live source
+  INDICATORS.forEach(ind=>{
+    if(!state.history[ind.id]){
+      const base = ind.fb.v, range = (ind.wh-ind.wl)*0.4;
+      const points = [];
+      for(let i=10;i>=0;i--){
+        const yr = new Date().getFullYear()-i;
+        const noise = (Math.sin(i*1.3)+Math.cos(i*0.7))*range*0.25;
+        const drift = (10-i)*0.02*range;
+        points.push({year:String(yr), value: +(base - drift*0.5 + noise).toFixed(2)});
       }
-    }catch(e){console.warn('WB direct fail',ind.id,e)}
-  }));
-  document.getElementById('liveTxt').textContent = 'Live · '+new Date().toLocaleDateString('en-IN',{day:'2-digit',month:'short',year:'numeric'});
+      points[points.length-1].value = base;
+      state.history[ind.id]=points;
+    }
+  });
+  state.loaded=true;
+  if(state.tab==='snapshot') renderSnapshot();
+  if(state.tab==='compare') renderCompare();
 }
 
 // ─── SIDEBAR ──────────────────────────────────────
